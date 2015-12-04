@@ -194,6 +194,7 @@
 	path = qtpurchasing
 	url = ../qtpurchasing.git
 	branch = 5.6
+	initrepo = true
 [submodule "tqtc-qtcharts"]
 	path = tqtc-qtcharts
 	url = ../tqtc-qtcharts
