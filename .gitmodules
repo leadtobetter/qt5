@@ -213,7 +213,7 @@
 [submodule "tqtc-qtvirtualkeyboard"]
 	path = tqtc-qtvirtualkeyboard
 	url = ../tqtc-qtvirtualkeyboard
-	branch = master
+	branch = 5.6
 	initrepo = true
 [submodule "tqtc-qmlcompiler"]
 	path = tqtc-qmlcompiler
