@@ -195,24 +195,24 @@
 	url = ../qtpurchasing.git
 	branch = 5.6
 	initrepo = true
-[submodule "tqtc-qtcharts"]
-	path = tqtc-qtcharts
-	url = ../tqtc-qtcharts
-	branch = master
-	initrepo = true
-[submodule "tqtc-qtdatavis3d"]
-	path = tqtc-qtdatavis3d
-	url = ../tqtc-qtdatavis3d
-	branch = master
-	initrepo = true
-[submodule "tqtc-scenegraph-raster"]
-	path = tqtc-scenegraph-raster
-	url = ../tqtc-scenegraph-raster
+[submodule "qtcharts"]
+	path = qtcharts
+	url = ../qtcharts
 	branch = 5.6
 	initrepo = true
-[submodule "tqtc-qtvirtualkeyboard"]
-	path = tqtc-qtvirtualkeyboard
-	url = ../tqtc-qtvirtualkeyboard
+[submodule "qtdatavis3d"]
+	path = qtdatavis3d
+	url = ../qtdatavis3d
+	branch = 5.6
+	initrepo = true
+[submodule "qtdeclarative-render2d"]
+	path = qtdeclarative-render2d
+	url = ../qtdeclarative-render2d
+	branch = 5.6
+	initrepo = true
+[submodule "qtvirtualkeyboard"]
+	path = qtvirtualkeyboard
+	url = ../qtvirtualkeyboard
 	branch = 5.6
 	initrepo = true
 [submodule "tqtc-qmlcompiler"]
