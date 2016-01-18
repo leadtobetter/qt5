@@ -195,28 +195,34 @@
 	url = ../qtpurchasing.git
 	branch = 5.6
 	initrepo = true
+	repoType = Internal
 [submodule "qtcharts"]
 	path = qtcharts
 	url = ../qtcharts
 	branch = 5.6
 	initrepo = true
+	repoType = Internal
 [submodule "qtdatavis3d"]
 	path = qtdatavis3d
 	url = ../qtdatavis3d
 	branch = 5.6
 	initrepo = true
+	repoType = Internal
 [submodule "qtdeclarative-render2d"]
 	path = qtdeclarative-render2d
 	url = ../qtdeclarative-render2d
 	branch = 5.6
 	initrepo = true
+	repoType = Internal
 [submodule "qtvirtualkeyboard"]
 	path = qtvirtualkeyboard
 	url = ../qtvirtualkeyboard
 	branch = 5.6
 	initrepo = true
+	repoType = Internal
 [submodule "tqtc-qmlcompiler"]
 	path = tqtc-qmlcompiler
 	url = ../tqtc-qmlcompiler
 	branch = 5.6
 	initrepo = true
+	repoType = Internal
