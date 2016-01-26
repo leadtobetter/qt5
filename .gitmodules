@@ -310,6 +310,7 @@
 	depends = qtbase qtdeclarative
 	path = qtdatavis3d
 	url = ../qtdatavis3d
+	project = qtdatavisualization.pro
 	branch = 5.6
 	initrepo = true
 [submodule "qtdeclarative-render2d"]
@@ -317,16 +318,19 @@
 	path = qtdeclarative-render2d
 	url = ../qtdeclarative-render2d
 	branch = 5.6
+	project = scenegraph-raster.pro
 	initrepo = true
 [submodule "qtvirtualkeyboard"]
 	depends = qtbase qtdeclarative qtmultimedia qtquickcontrols qtsvg
 	path = qtvirtualkeyboard
 	url = ../qtvirtualkeyboard
 	branch = 5.6
+	project = virtualkeyboard.pro
 	initrepo = true
 [submodule "tqtc-qmlcompiler"]
 	depends = qtbase qtdeclarative
 	path = tqtc-qmlcompiler
 	url = ../tqtc-qmlcompiler
 	branch = 5.6
+	project = qmlcompiler.pro
 	initrepo = true
