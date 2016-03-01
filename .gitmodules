@@ -312,33 +312,33 @@
 	depends = qtbase qtdeclarative
 	path = qtcharts
 	url = ../qtcharts
-	branch = 5.6
+	branch = 5.6.0
 	status = addon
 [submodule "qtdatavis3d"]
 	depends = qtbase qtdeclarative
 	path = qtdatavis3d
 	url = ../qtdatavis3d
 	project = qtdatavisualization.pro
-	branch = 5.6
+	branch = 5.6.0
 	status = addon
 [submodule "qtdeclarative-render2d"]
 	depends = qtbase qtdeclarative
 	path = qtdeclarative-render2d
 	url = ../qtdeclarative-render2d
-	branch = 5.6
+	branch = 5.6.0
 	status = addon
 	project = scenegraph-raster.pro
 [submodule "qtvirtualkeyboard"]
 	depends = qtbase qtdeclarative qtmultimedia qtquickcontrols qtsvg
 	path = qtvirtualkeyboard
 	url = ../qtvirtualkeyboard
-	branch = 5.6
+	branch = 5.6.0
 	status = addon
 	project = virtualkeyboard.pro
 [submodule "tqtc-qmlcompiler"]
 	depends = qtbase qtdeclarative
 	path = tqtc-qmlcompiler
 	url = ../tqtc-qmlcompiler
-	branch = 5.6
+	branch = 5.6.0
 	status = addon
 	project = qmlcompiler.pro
