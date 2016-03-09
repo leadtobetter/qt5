@@ -32,7 +32,7 @@
 	path = qtscript
 	url = ../qtscript.git
 	branch = 5.6.0
-	status = addon
+	status = deprecated
 	repoType = inherited
 [submodule "qtmultimedia"]
 	depends = qtbase
@@ -165,7 +165,7 @@
 	path = qtwayland
 	url = ../qtwayland.git
 	branch = 5.6.0
-	status = preview
+	status = addon
 	repoType = inherited
 [submodule "qt3d"]
 	depends = qtdeclarative qtimageformats
@@ -252,7 +252,7 @@
 	path = qtenginio
 	url = ../qtenginio.git
 	branch = 5.6.0
-	status = obsolete
+	status = deprecated
 	repoType = inherited
 [submodule "qtwebsockets"]
 	depends = qtbase
