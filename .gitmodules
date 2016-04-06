@@ -126,7 +126,7 @@
 	recommends = qtdeclarative
 	path = qtsystems
 	url = ../qtsystems.git
-	branch = dev
+	branch = 5.7
 	status = ignore
 	repoType = inherited
 [submodule "qtfeedback"]
@@ -148,7 +148,7 @@
 	depends = qtdeclarative
 	path = qtpim
 	url = ../qtpim.git
-	branch = dev
+	branch = 5.7
 	status = ignore
 	repoType = inherited
 [submodule "qtconnectivity"]
@@ -169,6 +169,7 @@
 	repoType = inherited
 [submodule "qt3d"]
 	depends = qtdeclarative qtimageformats
+	recommends = qtgamepad
 	path = qt3d
 	url = ../qt3d.git
 	branch = 5.7
@@ -295,11 +296,65 @@
 	status = addon
 	repoType = inherited
 [submodule "qtquickcontrols2"]
-	depends = qtquickcontrols
+	depends = qtgraphicaleffects
 	path = qtquickcontrols2
 	url = ../qtquickcontrols2.git
 	branch = 5.7
 	status = preview
+	repoType = inherited
+[submodule "qtpurchasing"]
+	depends = qtbase
+	recommends = qtdeclarative
+	path = qtpurchasing
+	url = ../qtpurchasing.git
+	branch = 5.7
+	status = addon
+	repoType = inherited
+[submodule "qtcharts"]
+	depends = qtbase
+	recommends = qtdeclarative qtmultimedia
+	path = qtcharts
+	url = ../qtcharts.git
+	branch = 5.7
+	status = addon
+	repoType = inherited
+[submodule "qtdatavis3d"]
+	depends = qtbase
+	recommends = qtdeclarative qtmultimedia
+	path = qtdatavis3d
+	url = ../qtdatavis3d.git
+	branch = 5.7
+	status = addon
+	repoType = inherited
+[submodule "qtvirtualkeyboard"]
+	depends = qtbase qtdeclarative qtsvg
+	recommends = qtmultimedia qtquickcontrols
+	path = qtvirtualkeyboard
+	url = ../qtvirtualkeyboard.git
+	branch = 5.7
+	status = addon
+	repoType = inherited
+[submodule "qtgamepad"]
+	depends = qtbase
+	recommends = qtdeclarative
+	path = qtgamepad
+	url = ../qtgamepad
+	branch = 5.7
+	status = preview
+	repoType = inherited
+[submodule "qtscxml"]
+	depends = qtbase qtdeclarative
+	path = qtscxml
+	url = ../qtscxml
+	branch = 5.7
+	status = preview
+	repoType = inherited
+[submodule "qtspeech"]
+	depends = qtbase
+	path = qtspeech
+	url = ../qtspeech
+	branch = dev
+	status = ignore
 	repoType = inherited
 [submodule "qtdeclarative-render2d"]
 	depends = qtbase qtdeclarative
