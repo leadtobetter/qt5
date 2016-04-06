@@ -39,149 +39,128 @@ use warnings;
 package Qt::InitRepository;
 
 
-=head1 NAME
+sub printUsage($)
+{
+    my ($ex) = @_;
 
-init-repository - initialize the Qt5 repository and all submodules
+    print <<EOF ;
+Usage:
+      ./init-repository [options]
 
-=head1 SYNOPSIS
+    This script may be run after an initial `git clone' of Qt5 in order to
+    check out all submodules. It fetches them from canonical URLs inferred
+    from the clone's origin.
 
-  ./init-repository [options]
+Options:
+  Global options:
 
-This script may be run after an initial `git clone' of Qt5 in order to check
-out all submodules.
+    --force, -f
+        Force initialization (even if the submodules are already checked
+        out).
 
+    --force-hooks
+        Force initialization of hooks (even if there are already hooks in
+        checked out submodules).
 
-=head1 OPTIONS
+    --quiet, -q
+        Be quiet. Will exit cleanly if the repository is already
+        initialized.
 
-B<Global options:>
+  Module options:
 
-=over
+    --module-subset=<module1>,<module2>...
+        Only initialize the specified subset of modules given as the
+        argument. Specified modules must already exist in .gitmodules. The
+        string "all" results in cloning all known modules. The strings
+        "essential", "addon", "preview", "deprecated", "obsolete", and
+        "ignore" refer to classes of modules; "default" maps to
+        "essential,addon,preview,deprecated", which corresponds with the
+        set of maintained modules and is also the default set. Module
+        names may be prefixed with a dash to exclude them from a bigger
+        set, e.g. "all,-ignore".
 
-=item --force, -f
+    --no-update
+        Skip the `git submodule update' command.
 
-Force initialization (even if the submodules are already checked out).
+    --branch
+        Instead of checking out specific SHA1s, check out the submodule
+        branches that correspond with the current supermodule commit. By
+        default, this option will cause local commits in the submodules to
+        be rebased. With --no-update, the branches will be checked out, but
+        their heads will not move.
 
+    --ignore-submodules
+        Set git config to ignore submodules by default when doing operations
+        on the qt5 repo, such as `pull', `fetch', `diff' etc.
 
-=item --force-hooks
+        After using this option, pass `--ignore-submodules=none' to git to
+        override it as needed.
 
-Force initialization of hooks (even if there are already hooks in checked out
-submodules).
+  Repository options:
 
+    --berlin
+        Switch to internal URLs and make use of the Berlin git mirrors.
+        (Implies `--mirror').
 
-=item --quiet, -q
+    --oslo
+        Switch to internal URLs and make use of the Oslo git mirrors.
+        (Implies `--mirror').
 
-Be quiet.  Will exit cleanly if the repository is already initialized.
+    --codereview-username <Gerrit/JIRA username>
+        Specify the user name for the (potentially) writable `gerrit' remote
+        for each module, for use with the Gerrit code review tool.
 
-=back
+        If this option is omitted, the gerrit remote is created without a
+        username and port number, and thus relies on a correct SSH
+        configuration.
 
+    --alternates <path to other Qt5 repo>
+        Adds alternates for each submodule to another full qt5 checkout.
+        This makes this qt5 checkout very small, as it will use the object
+        store of the alternates before unique objects are stored in its own
+        object store.
 
-B<Module options:>
+        This option has no effect when using `--no-update'.
 
-=over
+        NOTE: This will make this repo dependent on the alternate, which is
+        potentially dangerous! The dependency can be broken by also using
+        the `--copy-objects' option, or by running "git repack -a" in each
+        submodule, where required. Please read the note about the `--shared'
+        option in the documentation of `git clone' for more information.
 
-=item --module-subset=<module1>,<module2>...
+    --copy-objects
+        When `--alternates' is used, automatically do a "git repack -a" in
+        each submodule after cloning, to ensure that the repositories are
+        independent from the source used as a reference for cloning.
 
-Only initialize the specified subset of modules given as the argument. Specified
-modules must already exist in .gitmodules.
-The string "all" results in cloning all known modules. The default is the set of
-maintained modules.
-Module names may be prefixed with a dash to exclude them from a bigger set.
+        Note that this negates the disk usage benefits gained from the use
+        of `--alternates'.
 
-=item --no-update
+    --mirror <url-base>
+        Uses <url-base> as the base URL for submodule git mirrors.
 
-Skip the `git submodule update' command.
+        For example:
 
-=item --branch
+          --mirror user\@machine:/foo/bar/
 
-Instead of checking out specific SHA1s, check out the submodule branches that
-correspond with the current supermodule commit.
-By default, this option will cause local commits in the submodules to be rebased.
-With --no-update, the branches will be checked out, but their heads will not move.
+        ...will use the following as a mirror for qtbase:
 
-=item --ignore-submodules
+          user\@machine:/foo/bar/qt/qtbase.git
 
-Set git config to ignore submodules by default when doing operations on the
-qt5 repo, such as `pull', `fetch', `diff' etc.
+        The mirror is permitted to contain a subset of the submodules; any
+        missing modules will fall back to the canonical URLs.
 
-After using this option, pass `--ignore-submodules=none' to git to override
-it as needed.
-
-=back
-
-
-B<Repository options:>
-
-=over
-
-=item --berlin
-
-Switch to internal URLs and make use of the Berlin git mirrors.
-(Implies `--mirror').
-
-=item --oslo
-
-Switch to internal URLs and make use of the Oslo git mirrors.
-(Implies `--mirror').
-
-
-=item --codereview-username <Gerrit/JIRA username>
-
-Specify the user name for the (potentially) writable `gerrit' remote
-for each module, for use with the Gerrit code review tool.
-
-If this option is omitted, the gerrit remote is created without a username
-and port number, and thus relies on a correct SSH configuration.
-
-
-=item --alternates <path to other Qt5 repo>
-
-Adds alternates for each submodule to another full qt5 checkout. This makes
-this qt5 checkout very small, as it will use the object store of the
-alternates before unique objects are stored in its own object store.
-
-This option has no effect when using `--no-update'.
-
-B<NOTE:> This will make this repo dependent on the alternate, which is
-potentially dangerous!  The dependency can be broken by also using
-the `--copy-objects' option, or by running C<git repack -a> in each
-submodule, where required.  Please read the note about the `--shared' option
-in the documentation of `git clone' for more information.
-
-
-=item --copy-objects
-
-When `--alternates' is used, automatically do a C<git repack -a> in each
-submodule after cloning, to ensure that the repositories are independent
-from the source used as a reference for cloning.
-
-Note that this negates the disk usage benefits gained from the use of
-`--alternates'.
-
-
-=item --mirror <url-base>
-
-Uses <url-base> as the base URL for submodule git mirrors.
-
-For example:
-
-  --mirror user@machine:/foo/bar/
-
-...will use the following as a mirror for qtbase:
-
-  user@machine:/foo/bar/qt/qtbase.git
-
-The mirror is permitted to contain a subset of the submodules; any
-missing modules will fall back to the canonical URLs.
-
-=back
-
-=cut
+EOF
+    exit($ex);
+}
 
 use Carp         qw( confess             );
 use English      qw( -no_match_vars      );
-use Getopt::Long qw( GetOptionsFromArray );
-use Pod::Usage   qw( pod2usage           );
-use Cwd          qw( getcwd              );
+use Getopt::Long qw( GetOptions          );
+use Cwd          qw( getcwd abs_path     );
+
+my $script_path = abs_path($0);
+$script_path =~ s,[/\\][^/\\]+$,,;
 
 my $GERRIT_SSH_BASE
     = 'ssh://@USER@codereview.qt-project.org@PORT@/';
@@ -221,7 +200,7 @@ sub exe
 
 sub parse_arguments
 {
-    my ($self, @args) = @_;
+    my ($self) = @_;
 
     %{$self} = (%{$self},
         'alternates'          => "",
@@ -236,7 +215,7 @@ sub parse_arguments
         'module-subset'       => "default",
     );
 
-    GetOptionsFromArray(\@args,
+    GetOptions(
         'alternates=s'      =>  \$self->{qw{ alternates        }},
         'branch'            =>  \$self->{qw{ branch            }},
         'codereview-username=s' => \$self->{qw{ codereview-username }},
@@ -249,7 +228,7 @@ sub parse_arguments
         'update!'           =>  \$self->{qw{ update            }},
         'module-subset=s'   =>  \$self->{qw{ module-subset     }},
 
-        'help|?'            =>  sub { pod2usage(1);               },
+        'help|?'            =>  sub { printUsage(1);            },
 
         'berlin' => sub {
             $self->{'mirror-url'}        = $BER_MIRROR_URL_BASE;
@@ -257,11 +236,12 @@ sub parse_arguments
         'oslo' => sub {
             $self->{'mirror-url'}        = $OSLO_MIRROR_URL_BASE;
         },
-    ) || pod2usage(2);
+    ) || printUsage(2);
 
     # Replace any double trailing slashes from end of mirror
     $self->{'mirror-url'} =~ s{//+$}{/};
 
+    $self->{'module-subset'} =~ s/\bdefault\b/preview,essential,addon,deprecated/;
     $self->{'module-subset'} = [ split(/,/, $self->{'module-subset'}) ];
 
     return;
@@ -300,6 +280,14 @@ sub git_submodule_init
     return;
 }
 
+use constant {
+    STS_PREVIEW => 1,
+    STS_ESSENTIAL => 2,
+    STS_ADDON => 3,
+    STS_DEPRECATED => 4,
+    STS_OBSOLETE => 5
+};
+
 sub git_clone_all_submodules
 {
     my ($self, $my_repo_base, $co_branch, @subset) = @_;
@@ -324,8 +312,22 @@ sub git_clone_all_submodules
             $subbases{$mod} = $base;
         } elsif ($2 eq "update") {
             push @subset, '-'.$1 if ($3 eq 'none');
-        } elsif ($2 eq "initrepo") {
-            $subinits{$1} = ($3 eq "yes" or $3 eq "true");
+        } elsif ($2 eq "status") {
+            if ($3 eq "preview") {
+                $subinits{$1} = STS_PREVIEW;
+            } elsif ($3 eq "essential") {
+                $subinits{$1} = STS_ESSENTIAL;
+            } elsif ($3 eq "addon") {
+                $subinits{$1} = STS_ADDON;
+            } elsif ($3 eq "deprecated") {
+                $subinits{$1} = STS_DEPRECATED;
+            } elsif ($3 eq "obsolete") {
+                $subinits{$1} = STS_OBSOLETE;
+            } elsif ($3 eq "ignore") {
+                delete $subinits{$1};
+            } else {
+                die("Invalid subrepo status '$3' for '$1'.\n");
+            }
         }
     }
 
@@ -333,11 +335,23 @@ sub git_clone_all_submodules
     foreach my $mod (@subset) {
         if ($mod eq "all") {
             map { $include{$_} = 1; } keys %subbases;
-        } elsif ($mod eq "default") {
-            map { $include{$_} = 1; } grep { $subinits{$_} } keys %subbases;
+        } elsif ($mod eq "essential") {
+            map { $include{$_} = 1; } grep { ($subinits{$_} || 0) eq STS_ESSENTIAL } keys %subbases;
+        } elsif ($mod eq "addon") {
+            map { $include{$_} = 1; } grep { ($subinits{$_} || 0) eq STS_ADDON } keys %subbases;
+        } elsif ($mod eq "preview") {
+            map { $include{$_} = 1; } grep { ($subinits{$_} || 0) eq STS_PREVIEW } keys %subbases;
+        } elsif ($mod eq "deprecated") {
+            map { $include{$_} = 1; } grep { ($subinits{$_} || 0) eq STS_DEPRECATED } keys %subbases;
+        } elsif ($mod eq "obsolete") {
+            map { $include{$_} = 1; } grep { ($subinits{$_} || 0) eq STS_OBSOLETE } keys %subbases;
         } elsif ($mod =~ s/^-//) {
+            print "Warning: excluding non-existent module '$mod'.\n"
+                if (!defined($subdirs{$mod}));
             delete $include{$mod};
         } else {
+            die("Error: module subset names non-existent '$mod'.\n")
+                if (!defined($subdirs{$mod}));
             $include{$mod} = 1;
         }
     }
@@ -511,11 +525,16 @@ sub ensure_link
     return if (!$self->{'force-hooks'} and -f $tgt);
     unlink($tgt); # In case we have a dead symlink or pre-existing hook
     print "Aliasing $src\n      as $tgt ...\n" if (!$self->{quiet});
-    return if eval { symlink($src, $tgt) };
+    if ($^O ne "msys" && $^O ne "MSWin32") {
+        return if eval { symlink($src, $tgt) };
+    }
     # Windows doesn't do (proper) symlinks. As the post_commit script needs
     # them to locate itself, we write a forwarding script instead.
     open SCRIPT, ">".$tgt or die "Cannot create forwarding script $tgt: $!\n";
-    print SCRIPT "#!/bin/sh\nexec `dirname \$0`/$src \"\$\@\"\n";
+    # Make the path palatable for MSYS.
+    $src =~ s,\\,/,g;
+    $src =~ s,^(.):/,/$1/,g;
+    print SCRIPT "#!/bin/sh\nexec $src \"\$\@\"\n";
     close SCRIPT;
 }
 
@@ -523,19 +542,30 @@ sub git_install_hooks
 {
     my ($self) = @_;
 
-    return if (!-d 'qtrepotools/git-hooks');
+    my $hooks = $script_path.'/qtrepotools/git-hooks';
+    return if (!-d $hooks);
 
-    # Force C locale as git submodule returns the localized string "Entering"
-    local $ENV{LC_ALL} = 'C';
-    chomp(my @modules = `git submodule foreach :`);
-    push @modules, "";
-    for my $module (@modules) {
-        $module =~ s,^Entering \'([^\']+)\'$,$1/,;
-        my $rel = $module;
-        $rel =~ s,[^/]+,..,g;
-        $rel .= "../../qtrepotools/git-hooks/";
-        $self->ensure_link($rel.'gerrit_commit_msg_hook', $module.'.git/hooks/commit-msg');
-        $self->ensure_link($rel.'git_post_commit_hook', $module.'.git/hooks/post-commit');
+    my @configresult = qx(git config --list --local);
+    foreach my $line (@configresult) {
+        next if ($line !~ /submodule\.([^.=]+)\.url=/);
+        my $module = $1.'/.git';
+        if (!-d $module) {
+            open GITD, $module or die "Cannot open $module: $!\n";
+            my $gd = <GITD>;
+            close GITD;
+            chomp($gd);
+            $gd =~ s/^gitdir: // or die "Malformed .git file $module\n";
+            $module = $gd;  # We expect it to be always absolute.
+            if (open COMD, $module.'/commondir') {
+                my $cd = <COMD>;
+                chomp($cd);
+                $module .= '/'.$cd;
+                $module = abs_path($module);
+                close COMD;
+            }
+        }
+        $self->ensure_link($hooks.'/gerrit_commit_msg_hook', $module.'/hooks/commit-msg');
+        $self->ensure_link($hooks.'/git_post_commit_hook', $module.'/hooks/post-commit');
     }
 }
 
@@ -562,5 +592,5 @@ sub run
 
 #==============================================================================
 
-Qt::InitRepository->new(@ARGV)->run if (!caller);
+Qt::InitRepository->new()->run if (!caller);
 1;
