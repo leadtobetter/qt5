@@ -173,7 +173,7 @@
 	path = qt3d
 	url = ../qt3d.git
 	branch = 5.7
-	status = preview
+	status = addon
 	repoType = inherited
 [submodule "qtimageformats"]
 	depends = qtbase
@@ -253,7 +253,7 @@
 	path = qtenginio
 	url = ../qtenginio.git
 	branch = 5.7
-	status = deprecated
+	status = obsolete
 	repoType = inherited
 [submodule "qtwebsockets"]
 	depends = qtbase
@@ -351,6 +351,7 @@
 	repoType = inherited
 [submodule "qtspeech"]
 	depends = qtbase
+	recommends = qtdeclarative qtmultimedia
 	path = qtspeech
 	url = ../qtspeech
 	branch = dev
