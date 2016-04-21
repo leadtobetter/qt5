@@ -300,7 +300,7 @@
 	path = qtquickcontrols2
 	url = ../qtquickcontrols2.git
 	branch = 5.7
-	status = preview
+	status = addon
 	repoType = inherited
 [submodule "qtpurchasing"]
 	depends = qtbase
