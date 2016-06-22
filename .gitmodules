@@ -188,7 +188,7 @@
 	path = qtquick1
 	url = ../qtquick1.git
 	branch = 5.7
-	status = obsolete
+	status = ignore
 	repoType = inherited
 [submodule "qtgraphicaleffects"]
 	depends = qtdeclarative
@@ -253,7 +253,7 @@
 	path = qtenginio
 	url = ../qtenginio.git
 	branch = 5.7
-	status = obsolete
+	status = ignore
 	repoType = inherited
 [submodule "qtwebsockets"]
 	depends = qtbase
