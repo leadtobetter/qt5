@@ -107,7 +107,7 @@
 	repoType = inherited
 [submodule "qtlocation"]
 	depends = qtbase
-	recommends = qtdeclarative qtquickcontrols qtserialport qtsystems
+	recommends = qtdeclarative qtquickcontrols qtserialport
 	path = qtlocation
 	url = ../qtlocation.git
 	branch = 5.8
