@@ -303,7 +303,7 @@
 	status = addon
 	repoType = inherited
 [submodule "qtpurchasing"]
-	depends = qtbase
+	depends = qtbase qtandroidextras
 	recommends = qtdeclarative
 	path = qtpurchasing
 	url = ../qtpurchasing.git
