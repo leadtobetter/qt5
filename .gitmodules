@@ -107,7 +107,7 @@
 	repoType = inherited
 [submodule "qtlocation"]
 	depends = qtbase
-	recommends = qtdeclarative qtquickcontrols qtserialport qtsystems
+	recommends = qtdeclarative qtquickcontrols qtserialport
 	path = qtlocation
 	url = ../qtlocation.git
 	branch = dev
@@ -210,7 +210,7 @@
 	path = qtserialbus
 	url = ../qtserialbus.git
 	branch = dev
-	status = preview
+	status = addon
 	repoType = inherited
 [submodule "qtserialport"]
 	depends = qtbase
@@ -303,7 +303,7 @@
 	status = addon
 	repoType = inherited
 [submodule "qtpurchasing"]
-	depends = qtbase
+	depends = qtbase qtandroidextras
 	recommends = qtdeclarative
 	path = qtpurchasing
 	url = ../qtpurchasing.git
@@ -347,7 +347,7 @@
 	path = qtscxml
 	url = ../qtscxml
 	branch = dev
-	status = preview
+	status = addon
 	repoType = inherited
 [submodule "qtspeech"]
 	depends = qtbase
@@ -355,7 +355,15 @@
 	path = qtspeech
 	url = ../qtspeech
 	branch = dev
-	status = ignore
+	status = preview
+	repoType = inherited
+[submodule "qtnetworkauth"]
+	depends = qtbase
+	recommends = qtwebview
+	path = qtnetworkauth
+	url = ../qtnetworkauth
+	branch = dev
+	status = preview
 	repoType = inherited
 [submodule "tqtc-qmlcompiler"]
 	depends = qtbase qtdeclarative
