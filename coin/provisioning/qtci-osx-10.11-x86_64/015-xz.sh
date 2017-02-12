@@ -1,9 +1,11 @@
+#!/bin/bash
+
 #############################################################################
 ##
-## Copyright (C) 2016 The Qt Company Ltd.
+## Copyright (C) 2017 The Qt Company Ltd.
 ## Contact: http://www.qt.io/licensing/
 ##
-## This file is part of the test suite of the Qt Toolkit.
+## This file is part of the provisioning scripts of the Qt Toolkit.
 ##
 ## $QT_BEGIN_LICENSE:LGPL21$
 ## Commercial License Usage
@@ -31,36 +33,18 @@
 ##
 #############################################################################
 
-Function Remove {
-Param (
-        [string]$1
-    )
-        If (Test-Path $1){
-        echo "Remove $1"
-        Remove-Item -Recurse -Force $1
-    }Else{
-        echo "'$1' does not exists or already removed !!"
-    }
+# This script installs XZ-Utils
 
-}
+# XZ-Utils are needed for uncompressing xz-compressed files
 
-Function Remove-Path {
-    Param (
-        [string]$Path
-    )
-    echo "Remove $path from Path"
-    $name = "Path"
-    $value = ([System.Environment]::GetEnvironmentVariable("Path").Split(";") | ? {$_ -ne "$path"}) -join ";"
-    $type = "Machine"
-    [System.Environment]::SetEnvironmentVariable($name,$value,$type)
-}
+# shellcheck source=../common/try_catch.sh
+source "${BASH_SOURCE%/*}/../common/InstallPKGFromURL.sh"
 
-# Remove Python
-Remove C:\Python27
-Remove-Path C:\python27\scripts
-Remove-Path C:\python27
+PrimaryUrl="http://ci-files01-hki.ci.local/input/mac/osx_10.11_el_capitan/XZ.pkg"
+AltUrl="http://sourceforge.net/projects/macpkg/files/XZ/5.0.7/XZ.pkg"
+SHA1="f0c1f82ebcffe0bd4b8b57b6a77805db56b2de67"
+DestDir="/"
 
-# Remove Android sdk and ndk
-Remove C:\utils\android*
-[Environment]::SetEnvironmentVariable("ANDROID_NDK_HOME",$null,"User")
-[Environment]::SetEnvironmentVariable("ANDROID_SDK_HOME",$null,"User")
+InstallPKGFromURL "$PrimaryUrl" "$AltUrl" "$SHA1" "$DestDir"
+
+echo "XZ = 5.0.7" >> ~/versions.txt
