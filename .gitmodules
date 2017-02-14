@@ -364,6 +364,7 @@
 	url = ../qtnetworkauth
 	branch = 5.9
 	status = preview
+	repoType = inherited
 [submodule "qtremoteobjects"]
 	depends = qtbase
 	path = qtremoteobjects
