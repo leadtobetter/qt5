@@ -1,11 +1,11 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 #############################################################################
 ##
-## Copyright (C) 2016 The Qt Company Ltd.
+## Copyright (C) 2017 The Qt Company Ltd.
 ## Contact: http://www.qt.io/licensing/
 ##
-## This file is part of the test suite of the Qt Toolkit.
+## This file is part of the provisioning scripts of the Qt Toolkit.
 ##
 ## $QT_BEGIN_LICENSE:LGPL21$
 ## Commercial License Usage
@@ -33,14 +33,22 @@
 ##
 #############################################################################
 
-sudo apt-get -y build-dep qt5-default
+# This script installs MySQL
 
-# qtbase
-sudo apt-get -y install "^libxcb.*" libx11-xcb-dev libglu1-mesa-dev libxrender-dev libxi-dev
-sudo apt-get -y install libxcb-xinerama0-dev libdbus-1-dev libatspi2.0-dev
+# MySQL is needed for Qt to be able to support MySQL
 
-# qtmultimedia
-sudo apt-get -y install libasound2-dev libgstreamer0.10-dev libgstreamer-plugins-base0.10-dev
+# shellcheck source=../common/InstallAppFromCompressedFileFromURL.sh
+source "${BASH_SOURCE%/*}/../common/InstallAppFromCompressedFileFromURL.sh"
 
-# qtwebengine
-sudo apt-get -y install libssl-dev libxcursor-dev libxcomposite-dev libxdamage-dev libxrandr-dev libfontconfig1-dev libcap-dev libxtst-dev libpulse-dev libudev-dev libpci-dev libnss3-dev libasound2-dev libxss-dev libegl1-mesa-dev gperf bison
+PrimaryUrl="http://ci-files01-hki.ci.local/input/mac/macos_10.12_sierra/mysql-5.7.15-osx10.11-x86_64.tar.gz"
+AltUrl="https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-5.7.15-osx10.11-x86_64.tar.gz"
+SHA1="07949bd42f350b0504a1536b8830b809b4a34fca"
+appPrefix=""
+targetDir="/opt/mysql57/"
+
+sudo mkdir -p "/opt"
+
+InstallAppFromCompressedFileFromURL "$PrimaryUrl" "$AltUrl" "$SHA1" "$appPrefix" "$targetDir"
+
+echo "export MYSQLBINPATH=/opt/mysql57/bin" >> ~/.bashrc
+echo "MySQL = 5.7.15" >> ~/versions.txt
