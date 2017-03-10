@@ -1,9 +1,10 @@
+#!/usr/bin/env bash
 #############################################################################
 ##
-## Copyright (C) 2016 The Qt Company Ltd.
+## Copyright (C) 2017 The Qt Company Ltd.
 ## Contact: http://www.qt.io/licensing/
 ##
-## This file is part of the test suite of the Qt Toolkit.
+## This file is part of the provisioning scripts of the Qt Toolkit.
 ##
 ## $QT_BEGIN_LICENSE:LGPL21$
 ## Commercial License Usage
@@ -31,36 +32,29 @@
 ##
 #############################################################################
 
-Function Remove {
-Param (
-        [string]$1
-    )
-        If (Test-Path $1){
-        echo "Remove $1"
-        Remove-Item -Recurse -Force $1
-    }Else{
-        echo "'$1' does not exists or already removed !!"
-    }
+set -e
+# build latest qemu to usermode
+sudo apt-get -y install automake autoconf libtool
 
-}
+tempDir=$(mktemp -d) || echo "Failed to create temporary directory"
+git clone git://git.qemu.org/qemu.git "$tempDir"
+cd "$tempDir"
 
-Function Remove-Path {
-    Param (
-        [string]$Path
-    )
-    echo "Remove $path from Path"
-    $name = "Path"
-    $value = ([System.Environment]::GetEnvironmentVariable("Path").Split(";") | ? {$_ -ne "$path"}) -join ";"
-    $type = "Machine"
-    [System.Environment]::SetEnvironmentVariable($name,$value,$type)
-}
+#latest commit from the master proven to work
+git checkout c7f1cf01b8245762ca5864e835d84f6677ae8b1f
+git submodule update --init pixman
+./configure --target-list=arm-linux-user --static
+make
+sudo make install
+rm -rf "$tempDir"
 
-# Remove Python
-Remove C:\Python27
-Remove-Path C:\python27\scripts
-Remove-Path C:\python27
+# Enable binfmt support
+sudo apt-get -y install binfmt-support
 
-# Remove Android sdk and ndk
-Remove C:\utils\android*
-[Environment]::SetEnvironmentVariable("ANDROID_NDK_HOME",$null,"User")
-[Environment]::SetEnvironmentVariable("ANDROID_SDK_HOME",$null,"User")
+# Install qemu binfmt
+sudo update-binfmts --package qemu-arm --install arm \
+/usr/local/bin/qemu-arm \
+--magic \
+"\x7f\x45\x4c\x46\x01\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x28\x00" \
+--mask \
+"\xff\xff\xff\xff\xff\xff\xff\x00\xff\xff\xff\xff\xff\xff\xff\xff\xfe\xff\xff\xff"

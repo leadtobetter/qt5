@@ -1,3 +1,5 @@
+#!/bin/env bash
+
 #############################################################################
 ##
 ## Copyright (C) 2016 The Qt Company Ltd.
@@ -31,36 +33,12 @@
 ##
 #############################################################################
 
-Function Remove {
-Param (
-        [string]$1
-    )
-        If (Test-Path $1){
-        echo "Remove $1"
-        Remove-Item -Recurse -Force $1
-    }Else{
-        echo "'$1' does not exists or already removed !!"
-    }
+# This script needs to be called last during provisioning so that the software information will show up last in provision log.
 
-}
+# Storage installed RPM packages information
+echo "*********************************************" >> ~/versions.txt
+echo "***** All installed RPM packages *****" >> ~/versions.txt
+rpm -q -a | sort >> ~/versions.txt
+echo "*********************************************" >> ~/versions.txt
 
-Function Remove-Path {
-    Param (
-        [string]$Path
-    )
-    echo "Remove $path from Path"
-    $name = "Path"
-    $value = ([System.Environment]::GetEnvironmentVariable("Path").Split(";") | ? {$_ -ne "$path"}) -join ";"
-    $type = "Machine"
-    [System.Environment]::SetEnvironmentVariable($name,$value,$type)
-}
-
-# Remove Python
-Remove C:\Python27
-Remove-Path C:\python27\scripts
-Remove-Path C:\python27
-
-# Remove Android sdk and ndk
-Remove C:\utils\android*
-[Environment]::SetEnvironmentVariable("ANDROID_NDK_HOME",$null,"User")
-[Environment]::SetEnvironmentVariable("ANDROID_SDK_HOME",$null,"User")
+$(dirname $0)/../common/version.sh

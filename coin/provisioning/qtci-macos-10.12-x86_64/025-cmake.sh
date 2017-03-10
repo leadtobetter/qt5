@@ -1,9 +1,11 @@
+#!/bin/bash
+
 #############################################################################
 ##
-## Copyright (C) 2016 The Qt Company Ltd.
+## Copyright (C) 2017 The Qt Company Ltd.
 ## Contact: http://www.qt.io/licensing/
 ##
-## This file is part of the test suite of the Qt Toolkit.
+## This file is part of the provisioning scripts of the Qt Toolkit.
 ##
 ## $QT_BEGIN_LICENSE:LGPL21$
 ## Commercial License Usage
@@ -31,36 +33,18 @@
 ##
 #############################################################################
 
-Function Remove {
-Param (
-        [string]$1
-    )
-        If (Test-Path $1){
-        echo "Remove $1"
-        Remove-Item -Recurse -Force $1
-    }Else{
-        echo "'$1' does not exists or already removed !!"
-    }
+# This script installs CMake
 
-}
+# CMake is needed for autotests that verify that Qt can be built with CMake
 
-Function Remove-Path {
-    Param (
-        [string]$Path
-    )
-    echo "Remove $path from Path"
-    $name = "Path"
-    $value = ([System.Environment]::GetEnvironmentVariable("Path").Split(";") | ? {$_ -ne "$path"}) -join ";"
-    $type = "Machine"
-    [System.Environment]::SetEnvironmentVariable($name,$value,$type)
-}
+# shellcheck source=../common/InstallAppFromCompressedFileFromURL.sh
+source "${BASH_SOURCE%/*}/../common/InstallAppFromCompressedFileFromURL.sh"
 
-# Remove Python
-Remove C:\Python27
-Remove-Path C:\python27\scripts
-Remove-Path C:\python27
+PrimaryUrl="http://ci-files01-hki.ci.local/input/mac/macos_10.12_sierra/cmake-3.6.2-Darwin-x86_64.tar.gz"
+AltUrl="https://cmake.org/files/v3.6/cmake-3.6.2-Linux-x86_64.tar.gz"
+SHA1="13835afa3aea939e07a7ecccedcc041dd8c3a86e"
+appPrefix="cmake-3.6.2-Darwin-x86_64"
 
-# Remove Android sdk and ndk
-Remove C:\utils\android*
-[Environment]::SetEnvironmentVariable("ANDROID_NDK_HOME",$null,"User")
-[Environment]::SetEnvironmentVariable("ANDROID_SDK_HOME",$null,"User")
+InstallAppFromCompressedFileFromURL "$PrimaryUrl" "$AltUrl" "$SHA1" "$appPrefix"
+
+echo "CMake = 3.6.2" >> ~/versions.txt

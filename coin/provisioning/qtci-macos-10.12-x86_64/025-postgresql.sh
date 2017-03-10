@@ -1,9 +1,11 @@
+#!/bin/bash
+
 #############################################################################
 ##
-## Copyright (C) 2016 The Qt Company Ltd.
+## Copyright (C) 2017 The Qt Company Ltd.
 ## Contact: http://www.qt.io/licensing/
 ##
-## This file is part of the test suite of the Qt Toolkit.
+## This file is part of the provisioning scripts of the Qt Toolkit.
 ##
 ## $QT_BEGIN_LICENSE:LGPL21$
 ## Commercial License Usage
@@ -31,36 +33,21 @@
 ##
 #############################################################################
 
-Function Remove {
-Param (
-        [string]$1
-    )
-        If (Test-Path $1){
-        echo "Remove $1"
-        Remove-Item -Recurse -Force $1
-    }Else{
-        echo "'$1' does not exists or already removed !!"
-    }
+# This script installs PostgreSQL
 
-}
+# PostgreSQL is needed for Qt to be able to support PostgreSQL
 
-Function Remove-Path {
-    Param (
-        [string]$Path
-    )
-    echo "Remove $path from Path"
-    $name = "Path"
-    $value = ([System.Environment]::GetEnvironmentVariable("Path").Split(";") | ? {$_ -ne "$path"}) -join ";"
-    $type = "Machine"
-    [System.Environment]::SetEnvironmentVariable($name,$value,$type)
-}
+# shellcheck source=../common/InstallAppFromCompressedFileFromURL.sh
+source "${BASH_SOURCE%/*}/../common/InstallAppFromCompressedFileFromURL.sh"
 
-# Remove Python
-Remove C:\Python27
-Remove-Path C:\python27\scripts
-Remove-Path C:\python27
+psqlVersion="9.6.0"
 
-# Remove Android sdk and ndk
-Remove C:\utils\android*
-[Environment]::SetEnvironmentVariable("ANDROID_NDK_HOME",$null,"User")
-[Environment]::SetEnvironmentVariable("ANDROID_SDK_HOME",$null,"User")
+PrimaryUrl="http://ci-files01-hki.ci.local/input/mac/macos_10.12_sierra/Postgres-$psqlVersion.zip"
+AltUrl="https://github.com/PostgresApp/PostgresApp/releases/download/$psqlVersion/Postgres-$psqlVersion.zip"
+SHA1="5078e44663787006ca55fa3b5e2be598bed82eb5"
+appPrefix=""
+
+InstallAppFromCompressedFileFromURL "$PrimaryUrl" "$AltUrl" "$SHA1" "$appPrefix"
+
+echo "export POSTGRESQLBINPATH=/Applications/Postgres.app/Contents/Versions/9.6/bin" >> ~/.bashrc
+echo "PostgreSQL = $psqlVersion" >> ~/versions.txt

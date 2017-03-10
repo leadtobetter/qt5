@@ -13,7 +13,7 @@
 	repoType = inherited
 [submodule "qtdeclarative"]
 	depends = qtbase
-	recommends = qtxmlpatterns
+	recommends = qtsvg qtxmlpatterns
 	path = qtdeclarative
 	url = ../qtdeclarative.git
 	branch = dev
@@ -115,7 +115,7 @@
 	repoType = inherited
 [submodule "qtsensors"]
 	depends = qtbase
-	recommends = qtdeclarative qtsvg
+	recommends = qtdeclarative
 	path = qtsensors
 	url = ../qtsensors.git
 	branch = dev
@@ -184,7 +184,7 @@
 	repoType = inherited
 [submodule "qtquick1"]
 	depends = qtscript
-	recommends = qtxmlpatterns
+	recommends = qtsvg qtxmlpatterns
 	path = qtquick1
 	url = ../qtquick1.git
 	branch = dev
@@ -273,7 +273,7 @@
 	repoType = inherited
 [submodule "qtwebengine"]
 	depends = qtquickcontrols qtwebchannel
-	recommends = qtlocation
+	recommends = qtlocation qttools
 	path = qtwebengine
 	url = ../qtwebengine.git
 	branch = dev
@@ -340,7 +340,7 @@
 	path = qtgamepad
 	url = ../qtgamepad
 	branch = dev
-	status = preview
+	status = addon
 	repoType = inherited
 [submodule "qtscxml"]
 	depends = qtbase qtdeclarative
@@ -362,6 +362,13 @@
 	recommends = qtwebview
 	path = qtnetworkauth
 	url = ../qtnetworkauth
+	branch = dev
+	status = preview
+	repoType = inherited
+[submodule "qtremoteobjects"]
+	depends = qtbase
+	path = qtremoteobjects
+	url = ../qtremoteobjects
 	branch = dev
 	status = preview
 	repoType = inherited
