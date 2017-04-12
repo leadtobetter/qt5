@@ -107,7 +107,7 @@
 	repoType = inherited
 [submodule "qtlocation"]
 	depends = qtbase
-	recommends = qtdeclarative qtquickcontrols qtserialport
+	recommends = qtdeclarative qtquickcontrols qtquickcontrols2 qtserialport
 	path = qtlocation
 	url = ../qtlocation.git
 	branch = dev
@@ -274,6 +274,7 @@
 [submodule "qtwebengine"]
 	depends = qtquickcontrols qtwebchannel
 	recommends = qtlocation qttools
+	serialize = qtwebkit
 	path = qtwebengine
 	url = ../qtwebengine.git
 	branch = dev
