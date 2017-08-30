@@ -368,6 +368,6 @@
 	depends = qtbase qtdeclarative
 	path = tqtc-qmlcompiler
 	url = ../tqtc-qmlcompiler
-	branch = dev
+	branch = 5.10
 	status = addon
 	project = qmlcompiler.pro
