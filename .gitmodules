@@ -372,3 +372,21 @@
 	branch = 5.10
 	status = addon
 	project = qmlcompiler.pro
+[submodule "emulator"]
+	depends = qtbase qtdeclarative qtsimulator tqtc-qtglesstream
+	path = emulator
+	url = ../../tqtc-boot2qt/emulator
+	branch = master
+	status = addon
+[submodule "qtsimulator"]
+	depends = qtbase
+	path = qtsimulator
+	url = ../../tqtc-boot2qt/qtsimulator
+	branch = master
+	status = addon
+[submodule "tqtc-qtglesstream"]
+	depends = qtbase
+	path = tqtc-qtglesstream
+	url = ../tqtc-qtglesstream
+	branch = dev
+	status = addon
