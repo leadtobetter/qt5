@@ -390,3 +390,15 @@
 	url = ../tqtc-qtglesstream
 	branch = dev
 	status = addon
+[submodule "tqtc-qtknx"]
+	depends = qtbase
+	path = tqtc-qtknx
+	url = ../tqtc-qtknx.git
+	branch = 5.10
+	status = addon
+[submodule "tqtc-qtmqtt"]
+	depends = qtbase
+	path = tqtc-qtmqtt
+	url = ../tqtc-qtmqtt.git
+	branch = 5.10
+	status = addon
