@@ -1,9 +1,9 @@
-#############################################################################
+############################################################################
 ##
-## Copyright (C) 2016 The Qt Company Ltd.
+## Copyright (C) 2017 The Qt Company Ltd.
 ## Contact: http://www.qt.io/licensing/
 ##
-## This file is part of the test suite of the Qt Toolkit.
+## This file is part of the provisioning scripts of the Qt Toolkit.
 ##
 ## $QT_BEGIN_LICENSE:LGPL21$
 ## Commercial License Usage
@@ -31,21 +31,18 @@
 ##
 #############################################################################
 
-# Patch QNX SDK due to issues in the standard library.
-# The patches are available here:
-# http://www.qnx.com/download/feature.html?programid=27555
-# A copy of the patch must be in the root of the Coin path in
-# provisioning/qnx/patch-660-4367-RS6069_cpp-headers.zip
+. "$PSScriptRoot\..\common\helpers.ps1"
 
+# This script will install Vulkan SDK
 
-. "$PSScriptRoot\helpers.ps1"
+$version = "1.0.51.0"
+$url_cache = "\\ci-files01-hki.ci.local\provisioning\windows\VulkanSDK-" +$version+ "-Installer.exe"
+$vulkanPackage = "C:\Windows\Temp\vulkan-installer-$version.exe"
 
-$zip = "c:\users\qt\downloads\patch-660-4367-RS6069_cpp-headers.zip"
-$sha1 = "57A11FFE4434AD567B3C36F7B828DBB468A9E565"
-$tempDir = "C:\temp\qnx_path"
+Copy-Item $url_cache $vulkanPackage
+cmd /c "$vulkanPackage /S"
 
-Invoke-WebRequest -UseBasicParsing http://ci-files01-hki.intra.qt.io/input/qnx/patch-660-4367-RS6069_cpp-headers.zip -OutFile $zip
-Verify-Checksum $zip $sha1
-Extract-Zip $zip $tempDir
-Copy-Item $tempDir\patches\660-4367\target\* C:\qnx660\target\ -recurse -force
-Remove-Item $tempDir -recurse
+echo "Cleaning $vulkanPackage.."
+Remove-Item -Recurse -Force "$vulkanPackage"
+
+echo "Vulkan SDK = $version" >> ~\versions.txt
