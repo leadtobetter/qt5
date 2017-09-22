@@ -364,6 +364,13 @@
 	branch = dev
 	status = preview
 	repoType = inherited
+[submodule "qtopcua"]
+	depends = qtbase
+	path = qtopcua
+	url = ../qtopcua.git
+	branch = dev
+	status = preview
+	repoType = inherited
 [submodule "tqtc-qmlcompiler"]
 	depends = qtbase qtdeclarative
 	path = tqtc-qmlcompiler
