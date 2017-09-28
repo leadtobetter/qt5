@@ -396,12 +396,14 @@
 	url = ../tqtc-qtknx.git
 	branch = 5.10
 	status = addon
+	project = qtknx.pro
 [submodule "tqtc-qtmqtt"]
 	depends = qtbase
 	path = tqtc-qtmqtt
 	url = ../tqtc-qtmqtt.git
 	branch = 5.10
 	status = addon
+	project = qtmqtt.pro
 [submodule "GammaRay"]
 	depends = qtdeclarative qtlocation qtsvg qttools qtconnectivity qt3d qtivi qtscxml qtwayland
 	path = GammaRay
