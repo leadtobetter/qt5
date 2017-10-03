@@ -29,32 +29,40 @@
 ##
 ## $QT_END_LICENSE$
 ##
-#############################################################################
+############################################################################
 
 . "$PSScriptRoot\..\common\helpers.ps1"
 
-# This script installs 7-Zip
+function InstallMinGW
+{
+    Param (
+        [string] $release = $(BadParam("release file name")),
+        [string] $sha1    = $(BadParam("SHA1 checksum of the file"))
+    )
 
-$version = "1604"
+    $arch, $version, $null, $threading, $ex_handling, $build_ver, $revision = $release.split('-')
 
-if( (is64bitWinHost) -eq 1 ) {
-    $arch = "-x64"
-    $sha1 = "338A5CC5200E98EDD644FC21807FDBE59910C4D0"
+    if ($arch -eq "i686") { $win_arch = "Win32" }
+    elseif ($arch -eq "x86_64") { $win_arch = "Win64" }
+
+    $envvar = "MINGW$version"
+    $envvar = $envvar -replace '["."]'
+    $targetdir = "C:\$envvar"
+    $url_cache = "\\ci-files01-hki.intra.qt.io\provisioning\windows\" + $release + ".7z"
+    $url_official = "https://netcologne.dl.sourceforge.net/project/mingw-w64/Toolchains%20targetting%20" + $win_arch + "/Personal%20Builds/mingw-builds/" + $version + "/threads-" + $threading + "/" + $ex_handling + "/" + $arch + "-" + $version + "-release-" + $threading + "-" + $ex_handling + "-" + $build_ver + "-" + $revision + ".7z"
+
+    $mingwPackage = "C:\Windows\Temp\MinGW-$version.zip"
+    Download $url_official $url_cache $mingwPackage
+    Verify-Checksum $mingwPackage $sha1
+
+    Get-ChildItem $mingwPackage | % {& "C:\Utils\sevenzip\7z.exe" "x" $_.fullname "-o$TARGETDIR"}
+
+    echo "Adding MinGW environment variable."
+    [Environment]::SetEnvironmentVariable("$envvar", "$targetdir\mingw32", [EnvironmentVariableTarget]::Machine)
+
+    echo "Cleaning $mingwPackage.."
+    Remove-Item -Recurse -Force "$mingwPackage"
+
+    echo "MinGW = $version $release" >> ~\versions.txt
+
 }
-else {
-    $arch = ""
-    $sha1 = "dd1cb1163c5572951c9cd27f5a8dd550b33c58a4"
-}
-
-$url_cache = "\\ci-files01-hki.intra.qt.io\provisioning\windows\7z" + $version + $arch + ".exe"
-$url_official = "http://www.7-zip.org/a/7z" + $version + $arch + ".exe"
-$7zPackage = "C:\Windows\Temp\7zip-$version.exe"
-
-Download $url_official $url_cache $7zPackage
-Verify-Checksum $7zPackage $sha1
-cmd /c "$7zPackage /S /D=C:\Utils\sevenzip\"
-
-echo "Cleaning $7zPackage.."
-Remove-Item -Recurse -Force "$7zPackage"
-
-echo "7-Zip = $version" >> ~\versions.txt
