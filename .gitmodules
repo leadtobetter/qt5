@@ -372,17 +372,17 @@
 	branch = 5.10
 	status = addon
 	project = qmlcompiler.pro
-[submodule "tqtc-qtknx"]
+[submodule "qtknx"]
 	depends = qtbase
-	path = tqtc-qtknx
-	url = ../tqtc-qtknx.git
+	path = qtknx
+	url = ../qtknx.git
 	branch = 5.10
 	status = addon
 	project = qtknx.pro
-[submodule "tqtc-qtmqtt"]
+[submodule "qtmqtt"]
 	depends = qtbase
-	path = tqtc-qtmqtt
-	url = ../tqtc-qtmqtt.git
+	path = qtmqtt
+	url = ../qtmqtt.git
 	branch = 5.10
 	status = addon
 	project = qtmqtt.pro
