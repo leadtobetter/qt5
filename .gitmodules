@@ -429,7 +429,7 @@
 	status = addon
 	project = application-manager.pro
 [submodule "qtivi"]
-	depends = qtbase qtdeclarative qtmultimedia
+	depends = qtbase qtdeclarative qtmultimedia emulator
 	path = qtivi
 	url = ../qtivi
 	branch = 5.10
