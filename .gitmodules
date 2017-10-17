@@ -408,7 +408,7 @@
 	status = addon
 	project = automotivedemo.pro
 [submodule "neptune-ui"]
-	depends = qtbase qtdeclarative qtquickcontrols qtquickcontrols2 qttools
+	depends = qtbase qtdeclarative qtquickcontrols qtquickcontrols2 qttools qtapplicationmanager
 	path = neptune-ui
 	url = ../../qt-apps/neptune-ui
 	branch = 5.10
