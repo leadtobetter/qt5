@@ -343,7 +343,6 @@
 	repoType = inherited
 [submodule "qtnetworkauth"]
 	depends = qtbase
-	recommends = qtwebview
 	path = qtnetworkauth
 	url = ../qtnetworkauth.git
 	branch = 5.10
