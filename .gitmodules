@@ -280,6 +280,7 @@
 	repoType = inherited
 [submodule "qtquickcontrols2"]
 	depends = qtgraphicaleffects
+	recommends = qtimageformats
 	path = qtquickcontrols2
 	url = ../qtquickcontrols2.git
 	branch = dev
@@ -342,7 +343,6 @@
 	repoType = inherited
 [submodule "qtnetworkauth"]
 	depends = qtbase
-	recommends = qtwebview
 	path = qtnetworkauth
 	url = ../qtnetworkauth.git
 	branch = dev
