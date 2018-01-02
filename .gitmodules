@@ -371,10 +371,3 @@
 	branch = dev
 	status = preview
 	repoType = inherited
-[submodule "tqtc-qmlcompiler"]
-	depends = qtbase qtdeclarative
-	path = tqtc-qmlcompiler
-	url = ../tqtc-qmlcompiler
-	branch = dev
-	status = addon
-	project = qmlcompiler.pro
