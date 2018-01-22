@@ -56,6 +56,8 @@ try
     installPackages+=(git)
     # 7zip is a needed decompressing tool
     installPackages+=(p7zip-full)
+    # To be able to mount yocto-cache during builds
+    installPackages+=(nfs-common)
     # libssl-dev provides headers for OpenSSL
     installPackages+=(libssl-dev)
     # Needed libraries for X11 support accordingly to https://wiki.qt.io/Building_Qt_5_from_Git
@@ -101,6 +103,10 @@ try
     installPackages+=(python3-dev)
     installPackages+=(python3-pip)
     installPackages+=(python3-virtualenv)
+    # Needed to be able to build Yocto
+    installPackages+=(chrpath)
+    installPackages+=(gawk)
+    installPackages+=(texinfo)
     # Automates interactive applications (Needed by RTA to automate configure testing)
     installPackages+=(expect)
     installPackages+=(mesa-common-dev)
