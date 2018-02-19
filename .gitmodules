@@ -386,3 +386,9 @@
 	branch = master
 	status = addon
 	project = emulator.pro
+[submodule "qtopcua"]
+	depends = qtbase
+	path = qtopcua
+	url = ../qtopcua.git
+	branch = 5.11
+	status = preview
