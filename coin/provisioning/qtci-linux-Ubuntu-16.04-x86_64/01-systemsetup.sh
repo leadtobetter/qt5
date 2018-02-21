@@ -39,8 +39,6 @@ set -ex
 
 source "${BASH_SOURCE%/*}/../common/unix/try_catch.sh"
 source "${BASH_SOURCE%/*}/../common/unix/check_and_set_proxy.sh"
-# shellcheck source=../common/unix/try_catch.sh
-source "${BASH_SOURCE%/*}/../common/unix/try_catch.sh"
 
 NTS_IP=10.212.2.216
 
@@ -52,8 +50,8 @@ ExceptionProxy=104
 
 try
 (
-    echo "Set timezone to UTC"  || throw $ExceptionTimezone
-    sudo timedatectl set-timezone Etc/UTC
+    echo "Set timezone to UTC."
+    sudo timedatectl set-timezone Etc/UTC  || throw $ExceptionTimezone
     echo "Timeout for blanking the screen (0 = never)"
     gsettings set org.gnome.desktop.session idle-delay 0 || throw $ExceptionGsettings1
     echo "Prevents screen lock when screesaver goes active."

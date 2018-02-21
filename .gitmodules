@@ -115,7 +115,7 @@
 [submodule "qtfeedback"]
 	depends = qtdeclarative
 	recommends = qtmultimedia
-	path = qtfeedback
+	path = qtfeedbackthink
 	url = ../qtfeedback.git
 	branch = master
 	status = ignore
@@ -186,7 +186,7 @@
 	path = qtquickcontrols
 	url = ../qtquickcontrols.git
 	branch = dev
-	status = essential
+	status = addon
 	repoType = inherited
 [submodule "qtserialbus"]
 	depends = qtserialport
@@ -284,7 +284,7 @@
 	path = qtquickcontrols2
 	url = ../qtquickcontrols2.git
 	branch = dev
-	status = addon
+	status = essential
 	repoType = inherited
 [submodule "qtpurchasing"]
 	depends = qtbase qtandroidextras
@@ -361,13 +361,6 @@
 	recommends = qtdeclarative
 	path = qtwebglplugin
 	url = ../qtwebglplugin.git
-	branch = dev
-	status = preview
-	repoType = inherited
-[submodule "qtopcua"]
-	depends = qtbase
-	path = qtopcua
-	url = ../qtopcua.git
 	branch = dev
 	status = preview
 	repoType = inherited
