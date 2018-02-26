@@ -115,7 +115,7 @@
 [submodule "qtfeedback"]
 	depends = qtdeclarative
 	recommends = qtmultimedia
-	path = qtfeedbackthink
+	path = qtfeedback
 	url = ../qtfeedback.git
 	branch = master
 	status = ignore
