@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
+
 #############################################################################
 ##
-## Copyright (C) 2017 The Qt Company Ltd.
+## Copyright (C) 2018 The Qt Company Ltd.
 ## Contact: http://www.qt.io/licensing/
 ##
-## This file is part of the test suite of the Qt Toolkit.
+## This file is part of the provisioning scripts of the Qt Toolkit.
 ##
 ## $QT_BEGIN_LICENSE:LGPL21$
 ## Commercial License Usage
@@ -32,19 +33,20 @@
 ##
 #############################################################################
 
-source "${BASH_SOURCE%/*}/try_catch.sh"
-source "${BASH_SOURCE%/*}/../http_proxy.txt"
+# This script installs python2
 
-try
-(
-  wget -q -e "http_proxy=$proxy" --spider proxy.intra.qt.io
-)
+source "${BASH_SOURCE%/*}/InstallPKGFromURL.sh"
+source "${BASH_SOURCE%/*}/../unix/SetEnvVar.sh"
 
-if [ $? -eq 0 ]; then
-    echo "Setting http_proxy to $proxy"
-    export http_proxy=$proxy
+PrimaryUrl="http://ci-files01-hki.intra.qt.io/input/mac/python-2.7.14-macosx10.6.pkg"
+AltUrl="https://www.python.org/ftp/python/2.7.14/python-2.7.14-macosx10.6.pkg"
+SHA1="fa2bb77243ad0cb611aa3295204fab403bb0fa09"
+DestDir="/"
 
-else
-    echo "Proxy not detected at $proxy"
-fi
+InstallPKGFromURL "$PrimaryUrl" "$AltUrl" "$SHA1" "$DestDir"
 
+/Library/Frameworks/Python.framework/Versions/2.7/bin/pip install virtualenv
+
+SetEnvVar "PATH" "/Library/Frameworks/Python.framework/Versions/2.7/bin/:\$PATH"
+
+echo "python2 = 2.7.14" >> ~/versions.txt
