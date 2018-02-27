@@ -364,3 +364,31 @@
 	branch = dev
 	status = preview
 	repoType = inherited
+[submodule "qtknx"]
+	depends = qtbase
+	recommends = qtdeclarative
+	path = qtknx
+	url = ../qtknx.git
+	branch = dev
+	status = addon
+	project = qtknx.pro
+[submodule "qtmqtt"]
+	depends = qtbase
+	path = qtmqtt
+	url = ../qtmqtt.git
+	branch = dev
+	status = addon
+	project = qtmqtt.pro
+[submodule "emulator"]
+	depends = qtbase qtdeclarative
+	path = emulator
+	url = ../../tqtc-boot2qt/emulator
+	branch = master
+	status = addon
+	project = emulator.pro
+[submodule "qtopcua"]
+	depends = qtbase
+	path = qtopcua
+	url = ../qtopcua.git
+	branch = dev
+	status = preview
