@@ -1,11 +1,9 @@
-#!/usr/bin/env bash
-
-#############################################################################
+############################################################################
 ##
 ## Copyright (C) 2017 The Qt Company Ltd.
 ## Contact: http://www.qt.io/licensing/
 ##
-## This file is part of the test suite of the Qt Toolkit.
+## This file is part of the provisioning scripts of the Qt Toolkit.
 ##
 ## $QT_BEGIN_LICENSE:LGPL21$
 ## Commercial License Usage
@@ -32,33 +30,6 @@
 ## $QT_END_LICENSE$
 ##
 #############################################################################
+. "$PSScriptRoot\helpers.ps1"
 
-echo "Sourcing try_catch.sh"
-
-function try()
-{
-    [[ $- = *e* ]]; SAVED_OPT_E=$?
-    set +e
-}
-
-function throw()
-{
-    exit "$1"
-}
-
-function catch()
-{
-    export ex_code=$?
-    (( SAVED_OPT_E )) && set +e
-    return $ex_code
-}
-
-function throwErrors()
-{
-    set -e
-}
-
-function ignoreErrors()
-{
-    set +e
-}
+Get-WmiObject Win32_OSRecoveryConfiguration -EnableAllPrivileges | Set-WmiInstance -Arguments @{ AutoReboot=$False }
