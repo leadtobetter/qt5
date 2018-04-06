@@ -287,8 +287,8 @@
 	status = addon
 	repoType = inherited
 [submodule "qtpurchasing"]
-	depends = qtbase qtandroidextras
-	recommends = qtdeclarative
+	depends = qtbase
+	recommends = qtdeclarative qtandroidextras
 	path = qtpurchasing
 	url = ../qtpurchasing.git
 	branch = 5.11
