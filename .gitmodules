@@ -231,13 +231,6 @@
 	branch = dev
 	status = addon
 	repoType = inherited
-[submodule "qtenginio"]
-	depends = qtdeclarative
-	path = qtenginio
-	url = ../qtenginio.git
-	branch = dev
-	status = ignore
-	repoType = inherited
 [submodule "qtwebsockets"]
 	depends = qtbase
 	recommends = qtdeclarative
@@ -287,8 +280,8 @@
 	status = essential
 	repoType = inherited
 [submodule "qtpurchasing"]
-	depends = qtbase qtandroidextras
-	recommends = qtdeclarative
+	depends = qtbase
+	recommends = qtdeclarative qtandroidextras
 	path = qtpurchasing
 	url = ../qtpurchasing.git
 	branch = dev

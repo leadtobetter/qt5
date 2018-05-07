@@ -1,6 +1,3 @@
 #!/usr/bin/env bash
-
-set -ex
-
 BASEDIR=$(dirname "$0")
-$BASEDIR/../common/macos/pip.sh
+"$BASEDIR/../common/unix/squishInstall.sh"

@@ -2,10 +2,10 @@
 
 #############################################################################
 ##
-## Copyright (C) 2017 The Qt Company Ltd.
+## Copyright (C) 2018 The Qt Company Ltd.
 ## Contact: http://www.qt.io/licensing/
 ##
-## This file is part of the test suite of the Qt Toolkit.
+## This file is part of the provisioning scripts of the Qt Toolkit.
 ##
 ## $QT_BEGIN_LICENSE:LGPL21$
 ## Commercial License Usage
@@ -33,32 +33,16 @@
 ##
 #############################################################################
 
-echo "Sourcing try_catch.sh"
+# This script needs to be called last during provisioning so that the software information will show up last in provision log.
 
-function try()
-{
-    [[ $- = *e* ]]; SAVED_OPT_E=$?
-    set +e
-}
+# Storage installed RPM packages information
 
-function throw()
-{
-    exit "$1"
-}
+set -ex
 
-function catch()
-{
-    export ex_code=$?
-    (( SAVED_OPT_E )) && set +e
-    return $ex_code
-}
+# shellcheck disable=SC2129
+echo "*********************************************" >> ~/versions.txt
+echo "***** All installed RPM packages *****" >> ~/versions.txt
+rpm -q -a | sort >> ~/versions.txt
+echo "*********************************************" >> ~/versions.txt
 
-function throwErrors()
-{
-    set -e
-}
-
-function ignoreErrors()
-{
-    set +e
-}
+"$(dirname "$0")/../common/linux/version.sh"
