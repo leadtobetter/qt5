@@ -68,6 +68,17 @@ function BadParam
     throw("You must specify $Description")
 }
 
+function Get-DefaultDownloadLocation
+{
+    return $env:USERPROFILE + "\downloads\"
+}
+
+function Get-DownloadLocation
+{
+    Param ([string]$TargetName = $(BadParam("a target filename")))
+    return (Get-DefaultDownloadLocation) + $TargetName
+}
+
 function Download
 {
     Param (
@@ -76,6 +87,7 @@ function Download
         [string] $Destination = $(BadParam("a download target location"))
     )
     $ProgressPreference = 'SilentlyContinue'
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
     try {
         Write-Host "Downloading from cached location ($CachedUrl) to $Destination"
         if ($CachedUrl.StartsWith("http")) {
@@ -117,10 +129,10 @@ function Is64BitWinHost
     return [environment]::Is64BitOperatingSystem
 }
 
-function isProxyEnabled {
+function IsProxyEnabled {
     return (Get-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings').proxyEnable
 }
 
-function getProxy {
+function Get-Proxy {
     return (Get-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings').proxyServer
 }

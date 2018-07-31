@@ -1,80 +1,81 @@
 param(
     [Int32]$archVer=32,
-    [string]$toolchain="vs2015"
+    [string]$toolchain="vs2015",
+    [bool]$setDefault=$true
 )
 . "$PSScriptRoot\helpers.ps1"
+
+$libclang_version="6.0"
 
 # PySide versions following 5.6 use a C++ parser based on Clang (http://clang.org/).
 # The Clang library (C-bindings), version 3.9 or higher is required for building.
 
 # Starting from Qt 5.11 QDoc requires Clang to parse C++
 
-Get-Content "$PSScriptRoot\..\shared\sw_versions.txt" | Foreach-Object {
-    $var = $_.Split('=')
-    New-Variable -Name $var[0] -Value $var[1]
+$baseDestination = "C:\Utils\libclang-" + $libclang_version + "-" + $toolchain
+
+function install() {
+
+    param(
+        [string]$sha1=$1,
+        [string]$destination=$2
+    )
+
+    $zip = "c:\users\qt\downloads\libclang.7z"
+
     $libclang_version = $libclang_version -replace '["."]'
-}
+    $script:OfficialUrl = "https://download.qt.io/development_releases/prebuilt/libclang/qt/libclang-release_$libclang_version-windows-$toolchain`_$archVer.7z"
+    $script:CachedUrl = "http://ci-files01-hki.intra.qt.io/input/libclang/qt/libclang-release_$libclang_version-windows-$toolchain`_$archVer.7z"
 
-$zip = "c:\users\qt\downloads\libclang.7z"
-$baseDestination = "C:\Utils\libclang-" + $libclang_version
-
-function setURL() {
-    $script:url = "https://download.qt.io/development_releases/prebuilt/libclang/libclang-release_$libclang_version-windows-$toolchain`_$archVer.7z"
-}
-
-if ( $toolchain -eq "vs2015" ) {
-    if ( $archVer -eq 64 ) {
-        $sha1 = "dc42beb0efff130c4d7dfef3c97adf26f1ab04e0"
-        $destination = $baseDestination + "-64"
-
-        setURL
-        Download $url $url $zip
-        Verify-Checksum $zip $sha1
-
-        Extract-7Zip $zip C:\Utils\
-        Rename-Item C:\Utils\libclang $destination
-        Remove-Item -Force -Path $zip
-    }
-
-    $archVer=32
-    $sha1 = "64e826c00ae632fbb28655e6e1fa9194980e1205"
-    $destination = $baseDestination + "-32"
-
-    setURL
-    Download $url $url $zip
+    Download $OfficialUrl $CachedUrl $zip
     Verify-Checksum $zip $sha1
-
     Extract-7Zip $zip C:\Utils\
     Rename-Item C:\Utils\libclang $destination
     Remove-Item -Force -Path $zip
+}
+
+$toolchainSuffix = ""
+
+if ( $toolchain -eq "vs2015" ) {
+    if ( $archVer -eq 64 ) {
+        $sha1 = "a399af949271e6d3bfc578ea2c17ff1d6c6318b9"
+        $destination = $baseDestination + "-64"
+
+        install $sha1 $destination
+    }
+
+    $archVer=32
+    $sha1 = "aa3f68f1cfa87780a4631a98ce883d3d9cb94330"
+    $destination = $baseDestination + "-32"
+
+    install $sha1 $destination
+    $toolchainSuffix = "msvc"
 }
 
 if ( $toolchain -eq "mingw" ) {
     if ( $archVer -eq 64 ) {
-        $sha1 = "3e318f70a1e76c14365ced65f4fa7031bb730818"
+        $sha1 = "b382502f82d1cfa7d3cc3016d909d37edc19c22c"
         $destination = $baseDestination + "-64"
 
-        setURL
-        Download $url $url $zip
-        Verify-Checksum $zip $sha1
-
-        Extract-7Zip $zip C:\Utils\
-        Rename-Item C:\Utils\libclang $destination
-        Remove-Item -Force -Path $zip
+        install $sha1 $destination
     }
 
     $archVer=32
-    $sha1 = "a9973192a01a9c16976ed0cc6ef6dac3dbc4a2d3"
+    $sha1 = "cbc68e0f93f4cb0ed7084a045b7c07a1980a2a44"
     $destination = $baseDestination + "-32"
 
-    setURL
-    Download $url $url $zip
-    Verify-Checksum $zip $sha1
-
-    Extract-7Zip $zip C:\Utils\
-    Rename-Item C:\Utils\libclang $destination
-    Remove-Item -Force -Path $zip
+    install $sha1 $destination
+    $toolchainSuffix = "mingw"
 }
 
-Set-EnvironmentVariable "LLVM_INSTALL_DIR" ($baseDestination + "-_ARCH_")
+if ( $setDefault ) {
+    Set-EnvironmentVariable "LLVM_INSTALL_DIR" ($baseDestination + "-_ARCH_")
+}
+Set-EnvironmentVariable ("LLVM_INSTALL_DIR_" + $toolchainSuffix) ($baseDestination + "-_ARCH_")
 Write-Output "libClang = $libclang_version" >> ~/versions.txt
+
+if ( $libclang_version -eq "60" ) {
+    # This is a hacked static build of libclang which requires special
+    # handling on the qdoc side.
+    Set-EnvironmentVariable "QDOC_USE_STATIC_LIBCLANG" "1"
+}

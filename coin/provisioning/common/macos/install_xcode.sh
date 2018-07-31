@@ -49,7 +49,11 @@ function InstallXCode() {
     version=$2
 
     echo "Uncompressing and installing '$sourceFile'"
-    xzcat < "$sourceFile" | (cd /Applications/ && sudo cpio -dmi)
+    if [[ $sourceFile =~ tar ]]; then
+        cd /Applications/ && sudo tar -zxf "$sourceFile"
+    else
+        xzcat < "$sourceFile" | (cd /Applications/ && sudo cpio -dmi)
+    fi
 
     echo "Accept license"
     sudo xcodebuild -license accept
