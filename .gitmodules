@@ -67,6 +67,7 @@
 	repoType = inherited
 [submodule "qtdoc"]
 	depends = qtdeclarative qttools
+	recommends = qtmultimedia qtquickcontrols qtquickcontrols2
 	path = qtdoc
 	url = ../qtdoc.git
 	branch = dev
