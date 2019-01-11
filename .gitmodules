@@ -367,13 +367,6 @@
 	branch = dev
 	status = addon
 	project = qtmqtt.pro
-[submodule "emulator"]
-	depends = qtbase qtdeclarative
-	path = emulator
-	url = ../../tqtc-boot2qt/emulator
-	branch = master
-	status = addon
-	project = emulator.pro
 [submodule "qtopcua"]
 	depends = qtbase qtdeclarative
 	path = qtopcua
