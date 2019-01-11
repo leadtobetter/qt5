@@ -38,9 +38,9 @@ set -ex
 # This script will install squish package for Linux and Mac.
 # Squish is need by Release Test Automation (RTA)
 
-version="6.3.0"
+version="6.3.2"
 # Branch version without dot
-qtBranch="59x"
+qtBranch="510x"
 squishFolder="/opt/squish"
 squishUrl="ci-files01-hki.intra.qt.io:/hdd/www/input/squish/coin/$qtBranch/"
 squishFile="squish-$version-qt$qtBranch-linux64.run"
@@ -76,7 +76,7 @@ function MountAndInstall {
         usersGroup="staff"
         mountFolder="/Volumes"
         squishLicenseDir="/Users/qt"
-    elif uname -a |grep -q "el6\|el7"; then
+    elif uname -a |grep -q "el7"; then
         usersGroup="qt"
         mountFolder="/tmp"
         squishLicenseDir="/root"
@@ -122,13 +122,14 @@ function MountAndInstall {
         sudo cp $targetFileMount /tmp
         UnMount
         sudo hdiutil attach "/tmp/$targetFile"
-        sudo /Volumes/froglogic\ Squish/Install\ Squish.app/Contents/MacOS/Squish unattended=1 targetdir="$targetDirectory/package" qtpath="$targetDirectory"
+        sudo /Volumes/froglogic\ Squish/Install\ Squish.app/Contents/MacOS/Squish unattended=1 targetdir="$targetDirectory/package" qtpath="$targetDirectory" > /dev/null 2>&1
         mountFolder="/Volumes/froglogic Squish"
         UnMount
     elif [[ $targetFile == *.run ]]; then
         echo "'run-file', no need to uncompress"
         sudo cp $targetFileMount $targetDirectory
         UnMount
+        sudo chmod +x $targetDirectory/$targetFile
         sudo $targetDirectory/$targetFile unattended=1 targetdir="$targetDirectory/package" qtpath="$targetDirectory" > /dev/null 2>&1
         sudo rm -fr "$targetDirectory/$targetFile"
         if uname -a |grep -q "Ubuntu"; then
@@ -160,7 +161,7 @@ MountAndInstall "$squishLicenseUrl" "$squishFolder" "$squishLicenseFile"
 echo "Installing squish $version.."
 MountAndInstall "$squishUrl" "$squishFolder" "$squishFile"
 
-echo "Installing test suite for squish"
+echo "Installing provisioning scripts for squish"
 MountAndInstall "$testSuiteUrl" "$squishFolder" "$testSuite.tar.gz"
 
 echo "Verifying Squish Installation"

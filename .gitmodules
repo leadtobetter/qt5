@@ -13,7 +13,7 @@
 	repoType = inherited
 [submodule "qtdeclarative"]
 	depends = qtbase
-	recommends = qtsvg qtxmlpatterns
+	recommends = qtsvg
 	path = qtdeclarative
 	url = ../qtdeclarative.git
 	branch = dev
@@ -52,6 +52,7 @@
 	repoType = inherited
 [submodule "qtxmlpatterns"]
 	depends = qtbase
+	recommends = qtdeclarative
 	path = qtxmlpatterns
 	url = ../qtxmlpatterns.git
 	branch = dev
@@ -182,7 +183,8 @@
 	status = addon
 	repoType = inherited
 [submodule "qtserialbus"]
-	depends = qtserialport
+	depends = qtbase
+	recommends = qtserialport
 	path = qtserialbus
 	url = ../qtserialbus.git
 	branch = dev
@@ -241,8 +243,8 @@
 	status = addon
 	repoType = inherited
 [submodule "qtwebengine"]
-	depends = qtquickcontrols qtwebchannel
-	recommends = qtlocation qttools
+	depends = qtdeclarative
+	recommends = qtquickcontrols qtquickcontrols2 qtlocation qtwebchannel qttools
 	path = qtwebengine
 	url = ../qtwebengine.git
 	branch = dev
@@ -340,7 +342,7 @@
 	path = qtremoteobjects
 	url = ../qtremoteobjects.git
 	branch = dev
-	status = preview
+	status = addon
 	repoType = inherited
 [submodule "qtwebglplugin"]
 	depends = qtbase qtwebsockets
@@ -348,7 +350,7 @@
 	path = qtwebglplugin
 	url = ../qtwebglplugin.git
 	branch = dev
-	status = preview
+	status = addon
 	repoType = inherited
 [submodule "qtknx"]
 	depends = qtbase
@@ -373,8 +375,8 @@
 	status = addon
 	project = emulator.pro
 [submodule "qtopcua"]
-	depends = qtbase
+	depends = qtbase qtdeclarative
 	path = qtopcua
 	url = ../qtopcua.git
 	branch = dev
-	status = preview
+	status = addon

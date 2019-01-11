@@ -37,10 +37,10 @@ set -ex
 
 source "${BASH_SOURCE%/*}/../common/macos/install-commandlinetools.sh"
 
-version="9.3"
+version="10.1"
 packageName="Command_Line_Tools_macOS_10.13_for_Xcode_$version.dmg"
 url="http://ci-files01-hki.intra.qt.io/input/mac/macos_10.13_high_sierra/$packageName"
-sha1="3c0306d3faa1131550f1539feeeb5aa6c985763a"
+sha1="c8d198347adf836de7937691282b35e9d086e4c2"
 
 InstallCommandLineTools $url $url $sha1 $packageName $version
 

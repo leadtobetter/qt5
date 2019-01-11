@@ -70,7 +70,7 @@ function PrepareRepository
     $zip = "c:\users\$username\downloads\open62541.zip"
 
     $externalUrl = "https://github.com/open62541/open62541/archive/$commitSHA.zip"
-    $internalUrl = "http://ci-files01-hki.ci.local/input/open62541/$commitSHA.zip"
+    $internalUrl = "http://ci-files01-hki.intra.qt.io/input/open62541/$commitSHA.zip"
 
     Download $externalUrl $internalUrl $zip
     Verify-Checksum $zip $sha1
@@ -111,7 +111,7 @@ function MSVCEnvironment
 function BuildAndInstallOpen62541
 {
     Param (
-        [string]$Type=$(throw("You must specify the dev type [mingw530, mingw630, msvc2015, msvc2017]")),
+        [string]$Type=$(throw("You must specify the dev type [mingw530, mingw630, mingw730, msvc2015, msvc2017]")),
         [string]$Platform=$(throw("You must specify the target platform [x86, x64]")),
         [string]$MakeCommand=$(throw("You must specify a make command [mingw32-make, nmake]"))
     )
@@ -165,7 +165,7 @@ function BuildAndInstallOpen62541
 function DownloadAndInstall
 {
     Param (
-        [string]$Type=$(throw("You must specify the dev type [mingw530, mingw630, msvc2015, msvc2017]")),
+        [string]$Type=$(throw("You must specify the dev type [mingw530, mingw630, mingw730, msvc2015, msvc2017]")),
         [string]$Platform=$(throw("You must specify the target platform [x86, x64]"))
     )
     $baseLocation = "http://ci-files01-hki.intra.qt.io/input/open62541/"
@@ -206,12 +206,12 @@ if ($targetCommand.StartsWith("mingw")) {
     BuildAndInstallOpen62541 $targetCommand x86 "mingw32-make"
 } elseif ($targetCommand -eq "msvc2015_x86") {
     Write-Host "### Creating Open62541 for MSVC2015 x86"
-    MSVCEnvironment "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC" "vcvarsall.bat x86"
+    MSVCEnvironment "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC" "vcvarsall.bat x86"
     PushDevEnvironment
     BuildAndInstallOpen62541 msvc2015 x86 jom
 } elseif ($targetCommand -eq "msvc2015_x64") {
     Write-Host "### Creating Open62541 for MSVC2015 x64"
-    MSVCEnvironment "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC" "vcvarsall.bat amd64"
+    MSVCEnvironment "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC" "vcvarsall.bat amd64"
     PushDevEnvironment
     BuildAndInstallOpen62541 msvc2015 x64 jom
 } elseif ($targetCommand -eq "msvc2017_x86") {
@@ -233,6 +233,8 @@ if ($targetCommand.StartsWith("mingw")) {
     PowerShell -ExecutionPolicy Bypass -File "$PSScriptRoot\open62541.ps1" -targetCommand mingw530
     Write-Host "### Invoking MinGW630 build"
     PowerShell -ExecutionPolicy Bypass -File "$PSScriptRoot\open62541.ps1" -targetCommand mingw630
+    Write-Host "### Invoking MinGW730 build"
+    PowerShell -ExecutionPolicy Bypass -File "$PSScriptRoot\open62541.ps1" -targetCommand mingw730
     Write-Host "### Invoking MSVC2015 build"
     PowerShell -ExecutionPolicy Bypass -File "$PSScriptRoot\open62541.ps1" -targetCommand msvc2015_x86
     PowerShell -ExecutionPolicy Bypass -File "$PSScriptRoot\open62541.ps1" -targetCommand msvc2015_x64
@@ -246,6 +248,8 @@ if ($targetCommand.StartsWith("mingw")) {
     DownloadAndInstall mingw530 x86
     Write-Host "### MinGW630 x64"
     DownloadAndInstall mingw630 x86
+    Write-Host "### MinGW730 x64"
+    DownloadAndInstall mingw730 x64
     Write-Host "### MSVC2015 x86"
     DownloadAndInstall msvc2015 x86
     Write-Host "### MSVC2015 x64"

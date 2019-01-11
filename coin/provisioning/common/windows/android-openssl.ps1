@@ -1,6 +1,6 @@
 ############################################################################
 ##
-## Copyright (C) 2017 The Qt Company Ltd.
+## Copyright (C) 2018 The Qt Company Ltd.
 ## Contact: http://www.qt.io/licensing/
 ##
 ## This file is part of the provisioning scripts of the Qt Toolkit.
@@ -39,9 +39,9 @@
 # Msys need to be installed to target machine
 # More info and building instructions can be found from http://doc.qt.io/qt-5/opensslsupport.html
 
-$version = "1.0.2o"
+$version = "1.0.2p"
 $zip = Get-DownloadLocation ("openssl-$version.tar.gz")
-$sha1 = "a47faaca57b47a0d9d5fb085545857cc92062691"
+$sha1 = "f34b5322e92415755c7d58bf5d0d5cf37666382c"
 $destination = "C:\Utils\openssl-android-master"
 
 Download https://www.openssl.org/source/openssl-$version.tar.gz \\ci-files01-hki.intra.qt.io\provisioning\openssl\openssl-$version.tar.gz $zip
@@ -53,9 +53,9 @@ Rename-Item C:\Utils\openssl-$version $destination
 Remove-Item -Path $zip
 Remove-Item C:\Utils\openssl-$version.tar
 
-Set-EnvironmentVariable "CC" "C:\utils\android-ndk-r16b\toolchains\llvm\prebuilt\linux-x86_64\bin\clang"
-Set-EnvironmentVariable "AR" "C:\utils\android-ndk-r16b\toolchains\llvm\prebuilt\linux-x86_64\bin\llvm-ar"
-Set-EnvironmentVariable "ANDROID_DEV" "C:\utils\android-ndk-r16b\platforms\android-18\arch-arm\usr"
+# Set-EnvironmentVariable "CC" "C:\utils\Android\android-ndk-r18b\toolchains\llvm\prebuilt\windows\bin\clang"
+# Set-EnvironmentVariable "AR" "C:\utils\Android\android-ndk-r18b\toolchains\llvm\prebuilt\windows\bin\llvm-ar"
+# Set-EnvironmentVariable "ANDROID_DEV" "C:\utils\Android\android-ndk-r18b\platforms\android-21\arch-arm\usr"
 
 # Make sure configure for openssl has a "make" and "perl" available
 $env:PATH = $env:PATH + ";C:\msys\1.0\bin;C:\strawberry\perl\bin"

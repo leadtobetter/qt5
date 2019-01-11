@@ -55,8 +55,20 @@ function InstallXCode() {
         xzcat < "$sourceFile" | (cd /Applications/ && sudo cpio -dmi)
     fi
 
+    echo "Versioning application bundle"
+    majorVersion=$(echo $version | cut -d '.' -f 1)
+    versionedAppBundle="/Applications/Xcode${majorVersion}.app"
+    sudo mv /Applications/Xcode.app ${versionedAppBundle}
+
+    echo "Selecting Xcode"
+    sudo xcode-select --switch ${versionedAppBundle}
+
     echo "Accept license"
     sudo xcodebuild -license accept
+
+    echo "Install packages"
+    # -runFirstLaunch is valid in 9.x
+    sudo xcodebuild -runFirstLaunch || true
 
     echo "Enabling developer mode, so that using lldb does not require interactive password entry"
     sudo /usr/sbin/DevToolsSecurity -enable
