@@ -256,7 +256,7 @@
 	path = qtcanvas3d
 	url = ../qtcanvas3d.git
 	branch = dev
-	status = addon
+	status = ignore
 	repoType = inherited
 [submodule "qtwebview"]
 	depends = qtdeclarative
@@ -351,6 +351,13 @@
 	url = ../qtwebglplugin.git
 	branch = dev
 	status = addon
+	repoType = inherited
+[submodule "qtlottie"]
+	depends = qtbase qtdeclarative
+	path = qtlottie
+	url = ../qtlottie.git
+	branch = dev
+	status = preview
 	repoType = inherited
 [submodule "qtknx"]
 	depends = qtbase
