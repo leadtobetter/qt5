@@ -35,29 +35,6 @@
 
 set -ex
 
-# Download and install the Docker Toolbox for macOS (Docker Compose and Docker Machine).
-url="https://download.docker.com/mac/stable/DockerToolbox.pkg"
-target_file="DockerToolbox.pkg"
+# shellcheck source=../common/unix/install_protobuff.sh
+source "${BASH_SOURCE%/*}/../common/unix/install_protobuff.sh"
 
-if [ -x "$(command -v sha1sum)" ]
-then
-    # This part shall be used in CI environment only. The DownloadURL script needs sha1sum
-    # which is not included in the default macOS system. In addition, the cached pkg can't
-    # be downloaded out of the Qt internal network.
-    case ${BASH_SOURCE[0]} in
-        */macos/*) UNIX_PATH="${BASH_SOURCE[0]%/macos/*}/unix" ;;
-        */*) UNIX_PATH="${BASH_SOURCE[0]%/*}/../unix" ;;
-        *) UNIX_PATH="../unix" ;;
-    esac
-
-    source "$UNIX_PATH/DownloadURL.sh"
-    url_cached="http://ci-files01-hki.intra.qt.io/input/windows/DockerToolbox.pkg"
-    sha1="7196d2d30648d486978d29adb5837ff7876517c1"
-    DownloadURL $url_cached $url $sha1 $target_file
-else
-    curl $url -o $target_file
-fi
-sudo installer -pkg $target_file -target /
-
-# Start testserver provisioning
-source "${BASH_SOURCE%/*}/docker_testserver.sh"

@@ -159,3 +159,54 @@ function IsProxyEnabled {
 function Get-Proxy {
     return (Get-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings').proxyServer
 }
+
+function Retry{
+    <#
+    usage:
+    Retry{CODE}
+    Retry{CODE} <num of retries> <delay_s>
+    #delay is in seconds
+    #>
+    Param(
+        [Parameter(mandatory=$true)]
+        [scriptblock]$command,
+        [int][ValidateRange(1, 20)]$retry = 5,
+        [int][ValidateRange(1, 60)]$delay_s = 5
+    )
+    $success=$false
+    $retry_count=0
+    do{
+        try {
+            Invoke-Command -ScriptBlock $command
+            $success=$true
+        }
+        catch {
+            $retry_count++
+            Write-Host "Error: $_, try: $retry_count, retrying in $delay_s seconds"
+            Start-Sleep -Seconds $delay_s
+        }
+    } until ($success -or $retry+1 -le $retry_count)
+
+    if (-not $success) {
+        Throw("Failed to run command successfully in $retry_count tries")
+    }
+}
+
+function Remove {
+
+    Param (
+        [string]$Path = $(BadParam("a path"))
+    )
+    Write-Host "Removing $Path"
+    $i = 0
+    While ( Test-Path($Path) ){
+        Try{
+            remove-item -Force -Recurse -Path $Path -ErrorAction Stop
+        }catch{
+            $i +=1
+            if ($i -eq 5) {exit 1}
+            Write-Verbose "$Path locked, trying again in 5"
+            Start-Sleep -seconds 5
+        }
+    }
+}

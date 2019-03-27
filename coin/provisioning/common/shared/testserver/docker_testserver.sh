@@ -2,7 +2,7 @@
 
 #############################################################################
 ##
-## Copyright (C) 2018 The Qt Company Ltd.
+## Copyright (C) 2019 The Qt Company Ltd.
 ## Contact: http://www.qt.io/licensing/
 ##
 ## This file is part of the provisioning scripts of the Qt Toolkit.
@@ -35,37 +35,23 @@
 
 set -ex
 
-case ${BASH_SOURCE[0]} in
-    */macos/*) SERVER_PATH="${BASH_SOURCE[0]%/macos/*}/shared/testserver" ;;
-    */*) SERVER_PATH="${BASH_SOURCE[0]%/*}/../shared/testserver" ;;
-    *) SERVER_PATH="../shared/testserver" ;;
-esac
-
-# testserver shared scripts
-source "$SERVER_PATH/testserver_util.sh"
-
-# Nested virtualization - Print CPU features to verify that CI has enabled VT-X/AMD-v support
-cpu_features=$(sysctl -a | grep machdep.cpu.features)
-case $cpu_features in
-    *VMX*) ;;
-    *) echo "VMX not found error! Please make sure Coin has enabled VT-X/AMD-v." >&2; exit 1 ;;
+[ -x "$(command -v realpath)" ] && FILE=$(realpath ${BASH_SOURCE[0]}) || FILE=${BASH_SOURCE[0]}
+case $FILE in
+    */*) SERVER_PATH="${FILE%/*}" ;;
+    *) SERVER_PATH="." ;;
 esac
 
 # Create docker virtual machine (Boot2docker)
-source "$SERVER_PATH/docker_machine.sh"
+case $1 in
+    VMX) source "$SERVER_PATH/docker_machine.sh" "-d virtualbox" ;;
+    Hyper-V)
+        # The Hyper-v has been enabled in Windows 10. Disable checking the hardware virtualization.
+        source "$SERVER_PATH/docker_machine.sh" "-d virtualbox --virtualbox-no-vtx-check" ;;
+    *) ;;
+esac
 
-# Using SHA-1 of each server context as the tag of docker images. A tag labels a
-# specific image version. It is used by docker compose file (docker-compose.yml)
-# to launch the corresponding docker containers. If one of the server contexts
-# (./apache2, ./danted, ...) gets changes, all the related compose files in
-# qtbase should be updated as well.
+# Display system-wide information of docker-engine
+docker info
 
-source "$SERVER_PATH/settings.sh"
-
-for server in $testserver
-do
-    context="$SERVER_PATH/$server"
-    docker build -t qt-test-server-$server:$(sha1tree $context) $context
-done
-
-docker images
+# Create images
+$SERVER_PATH/docker_images.sh

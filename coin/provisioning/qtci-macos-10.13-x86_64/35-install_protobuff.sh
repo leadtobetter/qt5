@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 #############################################################################
 ##
 ## Copyright (C) 2018 The Qt Company Ltd.
@@ -33,9 +35,6 @@
 
 set -ex
 
-# Sort files by their SHA-1, and then return the accumulated result
-sha1tree () {
-    find "$@" -type f -print0 | \
-        xargs -0 shasum | cut -d ' ' -f 1 | \
-        sort | shasum | cut -d ' ' -f 1
-}
+# shellcheck source=../common/unix/install_protobuff.sh
+source "${BASH_SOURCE%/*}/../common/unix/install_protobuff.sh"
+

@@ -33,51 +33,53 @@
 
 . "$PSScriptRoot\helpers.ps1"
 
-# This script installs MySQL $version.
-# Both x86 and x64 versions needed when x86 integrations are done on x64 machine
-
-$version = "5.7.25"
-$baseNameX64 = "mysql-$version-winx64"
-$packagex64 = "C:\Windows\temp\$baseNameX64.zip"
-$baseNameX86 = "mysql-$version-win32"
-$packagex86 = "C:\Windows\temp\$baseNameX86.zip"
-$installFolder = "C:\Utils\my_sql"
+# This script installs Docker tool kits and Apple Bonjour on Windows.
 
 function DownloadAndInstall
 {
     Param (
+        [string]$externalUrl,
         [string]$internalUrl,
         [string]$package,
-        [string]$installPath
+        [string]$sha1,
+        [string]$parameters
     )
 
-    Write-Host "Fetching from URL ..."
-    Copy-Item $internalUrl $package
+    Write-Host "Fetching $package from URL..."
+    Download $externalUrl $internalUrl $package
+    Verify-Checksum $package $sha1
 
-    $zipDir = [io.path]::GetFileNameWithoutExtension($package)
-    Extract-7Zip $package $installPath "$zipDir\lib $zipDir\bin $zipDir\share $zipDir\include"
+    Write-Host "Installing $package..."
+    Run-Executable $package $parameters
 
+    Write-Host "Remove $package..."
     Remove-Item -Path $package
 }
 
-if (Is64BitWinHost) {
-    # Install x64 bit version
-    $architecture = "x64"
-    $internalUrl = "\\ci-files01-hki.intra.qt.io\provisioning\windows\mysql-$version-winx64.zip"
+# Install Docker Toolbox
+$package = Get-DownloadLocation "DockerToolbox.exe"
+$externalUrl = "https://download.docker.com/win/stable/DockerToolbox.exe"
+$internalUrl = "http://ci-files01-hki.intra.qt.io/input/windows/DockerToolbox.exe"
+$sha1 = "62325c426ff321d9ebfb89664d65cf9ffaef2985"
+DownloadAndInstall $externalUrl $internalUrl $package $sha1 "/SP- /SILENT"
+Add-Path 'C:\Program Files\Docker Toolbox'
+docker --version
+docker-compose --version
 
-    DownloadAndInstall $internalUrl $packagex64 $installFolder
+# Install Apple Bonjour
+$package = Get-DownloadLocation "BonjourPSSetup.exe"
+$externalUrl = "http://support.apple.com/downloads/DL999/en_US/BonjourPSSetup.exe"
+$internalUrl = "http://ci-files01-hki.intra.qt.io/input/windows/BonjourPSSetup.exe"
+$sha1 = "847f39e0ea80d2a4d902fe59657e18f5bc32a8cb"
+DownloadAndInstall $externalUrl $internalUrl $package $sha1 "/qr"
 
-    Set-EnvironmentVariable "MYSQL_INCLUDE_x64" "$installFolder\$baseNameX64\include"
-    Set-EnvironmentVariable "MYSQL_LIB_x64" "$installFolder\$baseNameX64\lib"
+# Nested virtualization - Print CPU features to verify that CI has enabled VT-X/AMD-v support
+$testserver = "$PSScriptRoot\..\shared\testserver\docker_testserver.sh"
+$sysInfoStr = systeminfo
+if ($sysInfoStr -like "*A hypervisor has been detected*") {
+    & 'C:\Program Files\Git\bin\bash.exe' --login $testserver Hyper-V
+} elseif ($sysInfoStr -like "*Virtualization Enabled In Firmware: Yes*") {
+    & 'C:\Program Files\Git\bin\bash.exe' --login $testserver VMX
+} else {
+    Write-Error "VMX not found error! Please make sure Coin has enabled VT-X/AMD-v."
 }
-
-# Install x86 bit version
-$architecture = "x86"
-$internalUrl = "\\ci-files01-hki.intra.qt.io\provisioning\windows\mysql-$version-win32.zip"
-DownloadAndInstall $internalUrl $packagex86 $installFolder
-
-Set-EnvironmentVariable "MYSQL_INCLUDE_x86" "$installFolder\$baseNameX86\include"
-Set-EnvironmentVariable "MYSQL_LIB_x86" "$installFolder\$baseNameX86\lib"
-
-# Store version information to ~/versions.txt, which is used to print version information to provision log.
-Write-Output "MySQL = $version" >> ~/versions.txt

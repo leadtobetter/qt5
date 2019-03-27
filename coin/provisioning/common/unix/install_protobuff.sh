@@ -33,30 +33,43 @@
 ##
 #############################################################################
 
-set -ex
+# shellcheck source=./DownloadURL.sh
+source "${BASH_SOURCE%/*}/DownloadURL.sh"
+# shellcheck source=./SetEnvVar.sh
+source "${BASH_SOURCE%/*}/SetEnvVar.sh"
 
-case ${BASH_SOURCE[0]} in
-    */linux/*) SERVER_PATH="${BASH_SOURCE[0]%/linux/*}/shared/testserver" ;;
-    */*) SERVER_PATH="${BASH_SOURCE[0]%/*}/../shared/testserver" ;;
-    *) SERVER_PATH="../shared/testserver" ;;
-esac
+# This script will install Google's Protocal Buffers which is needed by Automotive Suite
 
-# testserver shared scripts
-source "$SERVER_PATH/testserver_util.sh"
+version="3.6.1"
+sha1="44b8ba225f3b4dc45fb56d5881ec6a91329802b6"
+internalUrl="http://ci-files01-hki.intra.qt.io/input/automotive_suite/protobuf-all-$version.zip"
+externalUrl="https://github.com/protocolbuffers/protobuf/releases/download/v$version/protobuf-all-$version.zip"
 
-# Using SHA-1 of each server context as the tag of docker images. A tag labels a
-# specific image version. It is used by docker compose file (docker-compose.yml)
-# to launch the corresponding docker containers. If one of the server contexts
-# (./apache2, ./danted, ...) gets changes, all the related compose files in
-# qtbase should be updated as well.
+targetDir="$HOME/protobuf-$version"
+targetFile="$targetDir.zip"
+DownloadURL "$internalUrl" "$externalUrl" "$sha1" "$targetFile"
+unzip "$targetFile" -d "$HOME"
+sudo rm "$targetFile"
 
-source "$SERVER_PATH/settings.sh"
+# devtoolset is needed when running configuration
+if uname -a |grep -qv "Darwin"; then
+    export PATH="/opt/rh/devtoolset-4/root/usr/bin:$PATH"
+fi
 
-for server in $testserver
-do
-    context="$SERVER_PATH/$server"
-    # Sort files by their SHA-1 and use the accumulated result as the TAG
-    sudo docker build -t qt-test-server-$server:$(sha1tree $context) $context
-done
+echo "Configuring and building protobuf"
+cd "$targetDir"
+if uname -a |grep -q Darwin; then
+    ./configure --prefix "$(xcrun --sdk macosx --show-sdk-path)/usr/local"
+    SetEnvVar PATH "\$PATH:$(xcrun --sdk macosx --show-sdk-path)/usr/local/bin"
+else
+    ./configure
+fi
+make
+sudo make install
 
-sudo docker images
+# Refresh shared library cache if OS isn't macOS
+if uname -a |grep -qv "Darwin"; then
+    sudo ldconfig
+fi
+
+sudo rm -r "$targetDir"

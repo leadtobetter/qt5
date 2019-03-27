@@ -1,6 +1,8 @@
-############################################################################
+#!/usr/bin/env bash
+
+#############################################################################
 ##
-## Copyright (C) 2017 The Qt Company Ltd.
+## Copyright (C) 2019 The Qt Company Ltd.
 ## Contact: http://www.qt.io/licensing/
 ##
 ## This file is part of the provisioning scripts of the Qt Toolkit.
@@ -31,26 +33,36 @@
 ##
 #############################################################################
 
-# This script disables the automatic Windows updates
+set -ex
 
-. "$PSScriptRoot\helpers.ps1"
+[ -x "$(command -v realpath)" ] && FILE=$(realpath ${BASH_SOURCE[0]}) || FILE=${BASH_SOURCE[0]}
+case $FILE in
+    */*) SERVER_PATH="${FILE%/*}" ;;
+    *) SERVER_PATH="." ;;
+esac
 
-$service = get-service wuauserv
-if (-not $service) {
-    Write-Host "Windows Update service not found."
-    exit 0
+# Sort files by their SHA-1, and then return the accumulated result
+sha1tree () {
+    # For example, macOS doesn't install sha1sum by default. In such case, it uses shasum instead.
+    [ -x "$(command -v sha1sum)" ] || SHASUM=shasum
+
+    find "$@" -type f -print0 | \
+        xargs -0 ${SHASUM-sha1sum} | cut -d ' ' -f 1 | \
+        sort | ${SHASUM-sha1sum} | cut -d ' ' -f 1
 }
 
-if ($service.Status -eq "Stopped") {
-    Write-Host "Windows Update service already stopped."
-} else {
-    Write-Host "Stopping Windows Update service."
-    Retry {Stop-Service -Name "wuauserv" -Force} 20 5
-}
+# Using SHA-1 of each server context as the tag of docker images. A tag labels a
+# specific image version. It is used by docker compose file (docker-compose.yml)
+# to launch the corresponding docker containers. If one of the server contexts
+# (./apache2, ./danted, ...) gets changes, all the related compose files in
+# qtbase should be updated as well.
 
-$startup = Get-WmiObject Win32_Service | Where-Object {$_.Name -eq "wuauserv"} | Select -ExpandProperty "StartMode"
-if ($startup -ne "Disabled") {
-    set-service wuauserv -startup disabled
-} else {
-    Write-Host "Windows Update service startup already disabled."
-}
+source "$SERVER_PATH/settings.sh"
+
+for server in $testserver
+do
+    context="$SERVER_PATH/$server"
+    docker build -t qt-test-server-$server:$(sha1tree $context) $context
+done
+
+docker images
