@@ -1,6 +1,6 @@
 ############################################################################
 ##
-## Copyright (C) 2017 The Qt Company Ltd.
+## Copyright (C) 2019 The Qt Company Ltd.
 ## Contact: http://www.qt.io/licensing/
 ##
 ## This file is part of the provisioning scripts of the Qt Toolkit.
@@ -30,19 +30,41 @@
 ## $QT_END_LICENSE$
 ##
 #############################################################################
-. "$PSScriptRoot\..\common\helpers.ps1"
 
-# This script will install Visual Studio 2017 Build Tools
-# https://www.visualstudio.com/downloads/#build-tools-for-visual-studio-2017
+. "$PSScriptRoot\helpers.ps1"
 
-$version = "2017_version_15.0"
-$url_cache = "http://ci-files01-hki.intra.qt.io/input/windows/mu_build_tools_for_visual_studio_" + $version + "_x86_x64_10254482.exe"
-$sha1 = "a31e099e5114fef80a21654689e6864afc544a16"
-$msvcPackage = "C:\Windows\Temp\$version.exe"
+# This script installs 7-Zip
 
-Download $url_cache $url_cache $msvcPackage
-Verify-Checksum $msvcPackage $sha1
-cmd /c "$msvcPackage --all --passive --wait"
-echo "Cleaning $msvcPackage.."
-Remove-Item -Recurse -Force "$msvcPackage"
-echo "Visual Studio Build Tools = $version" >> ~\versions.txt
+$version = "20181211"
+$prog = "msys2"
+if (Is64BitWinHost) {
+    $arch = "x86_64"
+    $sha1 = "d689ff74fd060934bd7aaf458a11db67833463c2"
+    $folder = "msys64"
+} else {
+    $arch = "i686"
+    $sha1 = "928f9d1537d1a77dc7f2adab74fb438e7d11a98e"
+    $folder = "msys32"
+}
+$package = $prog + "-base-" + $arch + "-" + $version + ".tar.xz"
+
+
+$url_cache = "\\ci-files01-hki.intra.qt.io\provisioning\windows\$package"
+$url_official = "http://repo.msys2.org/distrib/$arch/$package"
+$PackagePath = "C:\Windows\Temp\$package"
+$TargetLocation = "C:\Utils"
+
+
+Download $url_official $url_cache $PackagePath
+Verify-Checksum $PackagePath $sha1
+Extract-tar_gz $PackagePath $TargetLocation
+$msys = "$TargetLocation\$folder\msys2_shell.cmd"
+
+# install perl
+Run-Executable "$msys" "`"-l`" `"-c`" `"rm -rf /etc/pacman.d/gnupg;pacman-key --init;pacman-key --populate msys2;pacman -S --noconfirm perl make`""
+Run-Executable "$msys" "`"-l`" `"-c`" `"cpan -i Text::Template Test::More`""
+
+Write-Host "Cleaning $PackagePath.."
+Remove-Item -Recurse -Force -Path "$PackagePath"
+
+Write-Output "7-Zip = $version" >> ~\versions.txt
