@@ -399,4 +399,4 @@
 	path = qtcoap
 	url = ../qtcoap.git
 	branch = 5.14
-	status = preview
+	status = addon
