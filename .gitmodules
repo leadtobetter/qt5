@@ -365,6 +365,7 @@
 	url = ../qtquicktimeline
 	branch = 5.14
 	status = preview
+	repoType = inherited
 [submodule "qtquick3d"]
 	depends = qtbase qtdeclarative
 	path = qtquick3d
