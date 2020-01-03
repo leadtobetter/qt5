@@ -378,25 +378,25 @@
 	recommends = qtdeclarative
 	path = qtknx
 	url = ../qtknx.git
-	branch = 5.14
+	branch = 5.15
 	status = addon
 	project = qtknx.pro
 [submodule "qtmqtt"]
 	depends = qtbase
 	path = qtmqtt
 	url = ../qtmqtt.git
-	branch = 5.14
+	branch = 5.15
 	status = addon
 	project = qtmqtt.pro
 [submodule "qtopcua"]
 	depends = qtbase qtdeclarative
 	path = qtopcua
 	url = ../qtopcua.git
-	branch = 5.14
+	branch = 5.15
 	status = preview
 [submodule "qtcoap"]
 	depends = qtbase
 	path = qtcoap
 	url = ../qtcoap.git
-	branch = 5.14
+	branch = 5.15
 	status = addon
