@@ -61,7 +61,7 @@ Configurations:
     Target arch: 'x86'
     Compiler: 'GCC'
     Features: ['DisableTests']
-    Configure arguments: '-opensource -confirm-license -verbose -extprefix /Users/qt/work/install -release -nomake tests -nomake examples -no-use-gold-linker -opengl es2 -qpa qnx -xplatform qnx-x86-qcc -I /opt/qnx700/target/qnx7/usr/include/openssl1_1'
+    Configure arguments: '-opensource -confirm-license -verbose -extprefix /Users/qt/work/install -release -nomake tests -nomake examples -opengl es2 -qpa qnx -xplatform qnx-x86-qcc -I /opt/qnx700/target/qnx7/usr/include/openssl1_1'
 -
     Template: 'qtci-windows-10-x86_64-52'
     Target os: 'QNX_700'
@@ -92,14 +92,14 @@ Configurations:
     Target arch: 'armv8'
     Compiler: 'GCC'
     Features: ['Packaging', 'DisableTests']
-    Configure arguments: '-opensource -confirm-license -verbose -extprefix /home/qt/work/install -release -nomake tests -nomake examples -no-sql-mysql -no-use-gold-linker -opengl es2 -qpa qnx -xplatform qnx-aarch64le-qcc -I /opt/qnx700/target/qnx7/usr/include/openssl1_1'
+    Configure arguments: '-opensource -confirm-license -verbose -extprefix /home/qt/work/install -release -nomake tests -nomake examples -no-sql-mysql -opengl es2 -qpa qnx -xplatform qnx-aarch64le-qcc -I /opt/qnx700/target/qnx7/usr/include/openssl1_1'
 -
     Template: 'qtci-linux-RHEL-7.6-x86_64'
     Target os: 'QNX_700'
     Target arch: 'x86_64'
     Compiler: 'GCC'
     Features: ['Packaging', 'DisableTests']
-    Configure arguments: '-opensource -confirm-license -verbose -extprefix /home/qt/work/install -release -nomake tests -nomake examples -no-sql-mysql -no-use-gold-linker -opengl es2 -qpa qnx -xplatform qnx-x86-64-qcc -I /opt/qnx700/target/qnx7/usr/include/openssl1_1'
+    Configure arguments: '-opensource -confirm-license -verbose -extprefix /home/qt/work/install -release -nomake tests -nomake examples -no-sql-mysql -opengl es2 -qpa qnx -xplatform qnx-x86-64-qcc -I /opt/qnx700/target/qnx7/usr/include/openssl1_1'
 -
     Template: 'qtci-windows-10-x86_64-52'
     Target os: 'WebAssembly'
