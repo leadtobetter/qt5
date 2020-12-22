@@ -30,9 +30,8 @@
 	depends = qtbase
 	recommends = qttools
 	path = qtscript
-	url = ../tqtc-qtscript.git
-	alias = qt/qtscript
-	branch = tqtc/lts-5.15
+	url = ../qtscript.git
+	branch = 5.15
 	status = deprecated
 [submodule "qtmultimedia"]
 	depends = qtbase
