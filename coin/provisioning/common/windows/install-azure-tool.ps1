@@ -1,5 +1,3 @@
-#!/usr/bin/env bash
-
 #############################################################################
 ##
 ## Copyright (C) 2020 The Qt Company Ltd.
@@ -32,12 +30,11 @@
 ## $QT_END_LICENSE$
 ##
 #############################################################################
+. "$PSScriptRoot\helpers.ps1"
 
-# Install libusb
-set -ex
+# This script will install Azure singtool using Dotnet SDK
+$dotnet = "C:\Program Files\dotnet\dotnet.exe"
 
-source "${BASH_SOURCE%/*}/../unix/SetEnvVar.sh"
-brew install --build-from-source libusb
-read -r -a arr <<< $(brew list --versions libusb)
-version=${arr[1]}
-echo "libusb = $version" >> ~/versions.txt
+$version = "2.0.17"
+Run-Executable "$dotnet" "tool install --global AzureSignTool --version $version"
+
