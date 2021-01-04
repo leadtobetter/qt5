@@ -82,7 +82,7 @@ sudo zypper -nq install libicu-devel libicu60_2
 # qtwebengine
 sudo zypper -nq install alsa-devel dbus-1-devel \
          libXcomposite-devel libXcursor-devel libXrandr-devel libXtst-devel \
-         mozilla-nspr-devel mozilla-nss-devel
+         mozilla-nspr-devel mozilla-nss-devel glproto-devel
 
 # qtwebkit
 sudo zypper -nq install libxml2-devel libxslt-devel
