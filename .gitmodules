@@ -121,13 +121,6 @@
 	branch = master
 	status = ignore
 	repoType = inherited
-[submodule "qtdocgallery"]
-	depends = qtdeclarative
-	path = qtdocgallery
-	url = ../qtdocgallery.git
-	branch = master
-	status = ignore
-	repoType = inherited
 [submodule "qtpim"]
 	depends = qtdeclarative
 	path = qtpim
