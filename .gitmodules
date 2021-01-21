@@ -37,6 +37,7 @@
 	url = ../qtscript.git
 	branch = 5.15
 	status = deprecated
+	repoType = replaced
 [submodule "qtmultimedia"]
 	depends = qtbase
 	recommends = qtdeclarative
@@ -267,6 +268,7 @@
 	branch = 5.15
 	status = addon
 	priority = 10
+	repoType = replaced
 [submodule "qtcanvas3d"]
 	depends = qtdeclarative
 	path = qtcanvas3d
